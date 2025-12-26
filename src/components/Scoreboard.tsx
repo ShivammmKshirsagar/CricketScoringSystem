@@ -150,7 +150,7 @@ export function Scoreboard({
                 {target}
               </span>
               <span className="text-sm text-muted-foreground ml-2">
-                Need {target - score.runs} from {120 - (score.overs * 6 + score.balls)} balls
+                Need {target - score.runs} from {(totalOvers * 6) - (score.overs * 6 + score.balls)} balls
               </span>
             </div>
           </div>

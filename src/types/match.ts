@@ -22,6 +22,8 @@ export interface Match {
   venue: string;
   overs: number;
   status: 'upcoming' | 'live' | 'completed';
+  scheduledAt?: Date;
+  archived?: boolean;
   createdAt: Date;
 }
 

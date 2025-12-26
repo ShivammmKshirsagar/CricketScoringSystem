@@ -1,0 +1,108 @@
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Logo } from "@/components/Logo";
+import { Card } from "@/components/Card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/auth/AuthContext";
+
+type LocationState = {
+  from?: { pathname?: string };
+};
+
+export default function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, user, isAuthenticated } = useAuth();
+
+  const state = (location.state ?? {}) as LocationState;
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (isAuthenticated && user) {
+    return <Navigate to={user.role === "admin" ? "/admin" : "/customer"} replace />;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const authenticated = login({ username, password });
+      const next = state.from?.pathname;
+      if (next && next !== "/login") {
+        navigate(next, { replace: true });
+        return;
+      }
+
+      navigate(authenticated.role === "admin" ? "/admin" : "/customer", { replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="hero-glow" />
+
+      <div className="container mx-auto px-4 py-10">
+        <div className="mx-auto max-w-md">
+          <div className="mb-8 flex justify-center">
+            <Logo />
+          </div>
+
+          <Card variant="glow" className="animate-slide-up">
+            <h1 className="font-display text-2xl font-bold text-foreground">Sign in</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Use demo credentials:
+              <br />
+              admin / admin123
+              <br />
+              customer / customer123
+            </p>
+
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin or customer"
+                  autoComplete="username"
+                  required
+                  className="bg-secondary/50 border-border/50"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  className="bg-secondary/50 border-border/50"
+                />
+              </div>
+
+              <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Signing in..." : "Sign in"}
+              </Button>
+            </form>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

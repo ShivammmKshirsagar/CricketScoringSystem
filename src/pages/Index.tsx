@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { FeatureCard } from "@/components/FeatureCard";
 import { CreateMatchModal } from "@/components/CreateMatchModal";
 import { LiveMatch } from "@/pages/LiveMatch";
 import { Match } from "@/types/match";
+import { useAuth } from "@/auth/AuthContext";
 import { 
   Play, 
   Zap, 
@@ -15,6 +17,8 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMatch, setActiveMatch] = useState<Match | null>(null);
 
@@ -42,10 +46,27 @@ const Index = () => {
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Logo />
-            <Button variant="hero" onClick={() => setIsModalOpen(true)}>
-              <Play className="h-4 w-4 mr-2" />
-              Start Match
-            </Button>
+            <div className="flex items-center gap-3">
+              {isAuthenticated && (
+                <div className="hidden md:flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground">Signed in as {user?.username}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      logout();
+                      navigate("/login", { replace: true });
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              )}
+              <Button variant="hero" onClick={() => setIsModalOpen(true)}>
+                <Play className="h-4 w-4 mr-2" />
+                Start Match
+              </Button>
+            </div>
           </div>
         </nav>
       </header>

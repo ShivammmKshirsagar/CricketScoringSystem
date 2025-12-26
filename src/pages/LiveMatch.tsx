@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Scoreboard } from "@/components/Scoreboard";
 import { BallInputPanel } from "@/components/BallInputPanel";
@@ -13,20 +13,37 @@ import { createInitialScoreState, applyBall } from "@/lib/scoreEngine";
 import { ArrowLeft, RotateCcw, Flag } from "lucide-react";
 import { toast } from "sonner";
 import { getOverSummaries } from "@/lib/scoreSelectors";
+import { getLiveScore, saveLiveScore } from "@/lib/liveScoreStore";
 
 interface LiveMatchProps {
   match: Match;
   onEndMatch: () => void;
+  persist?: boolean;
+  backTo?: string;
 }
 
-export function LiveMatch({ match, onEndMatch }: LiveMatchProps) {
+export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMatchProps) {
   const navigate = useNavigate();
-  const [currentInnings, setCurrentInnings] = useState<1 | 2>(1);
-  const [innings1Score, setInnings1Score] = useState<ScoreState>(createInitialScoreState());
-  const [innings2Score, setInnings2Score] = useState<ScoreState>(() => ({
-    ...createInitialScoreState(),
-    target: undefined,
-  }));
+  const persisted = useMemo(() => (persist ? getLiveScore(match.id) : null), [persist, match.id]);
+  const [currentInnings, setCurrentInnings] = useState<1 | 2>(() => persisted?.currentInnings ?? 1);
+  const [innings1Score, setInnings1Score] = useState<ScoreState>(() => persisted?.innings1Score ?? createInitialScoreState());
+  const [innings2Score, setInnings2Score] = useState<ScoreState>(() => {
+    if (persisted?.innings2Score) return persisted.innings2Score;
+    return {
+      ...createInitialScoreState(),
+      target: undefined,
+    };
+  });
+
+  useEffect(() => {
+    if (!persist) return;
+    saveLiveScore({
+      matchId: match.id,
+      currentInnings,
+      innings1Score,
+      innings2Score,
+    });
+  }, [persist, match.id, currentInnings, innings1Score, innings2Score]);
 
   const battingTeam = currentInnings === 1
     ? (match.tossDecision === 'bat' ? match.team1 : match.team2)
@@ -123,7 +140,7 @@ export function LiveMatch({ match, onEndMatch }: LiveMatchProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate("/")}
+                onClick={() => navigate(backTo ?? "/")}
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
