@@ -1,3 +1,6 @@
+// match.ts
+import type { BallEvent, Extras, BallType, WicketType } from './score';
+
 export interface Team {
   id: string;
   name: string;
@@ -36,39 +39,3 @@ export interface Innings {
   isCompleted: boolean;
 }
 
-export interface Extras {
-  wides: number;
-  noBalls: number;
-  byes: number;
-  legByes: number;
-  penalty: number;
-}
-
-export interface BallEvent {
-  id: string;
-  inningsId: string;
-  overNumber: number;
-  ballNumber: number;
-  runs: number;
-  isWicket: boolean;
-  wicketType?: WicketType;
-  isWide: boolean;
-  isNoBall: boolean;
-  isBye: boolean;
-  isLegBye: boolean;
-  isBoundary: boolean;
-  isSix: boolean;
-  timestamp: Date;
-}
-
-export type WicketType = 
-  | 'bowled' 
-  | 'caught' 
-  | 'lbw' 
-  | 'run_out' 
-  | 'stumped' 
-  | 'hit_wicket'
-  | 'caught_behind'
-  | 'caught_and_bowled';
-
-export type BallType = 'normal' | 'wide' | 'no_ball' | 'bye' | 'leg_bye';

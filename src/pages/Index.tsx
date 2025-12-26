@@ -87,17 +87,17 @@ const Index = () => {
           {/* Stats */}
           <div className="flex items-center justify-center gap-8 md:gap-16 mt-16 pt-16 border-t border-border/50 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">1M+</div>
+              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">1000+</div>
               <div className="text-sm text-muted-foreground mt-1">Balls Scored</div>
             </div>
             <div className="h-12 w-px bg-border/50"></div>
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">50K+</div>
+              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">50+</div>
               <div className="text-sm text-muted-foreground mt-1">Matches</div>
             </div>
             <div className="h-12 w-px bg-border/50"></div>
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">99.9%</div>
+              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">100%</div>
               <div className="text-sm text-muted-foreground mt-1">Uptime</div>
             </div>
           </div>
@@ -175,7 +175,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Logo size="sm" />
             <p className="text-sm text-muted-foreground">
-              © 2024 CricketScore. Built with passion for cricket.
+              © 2026 CricketScore. Built with passion for cricket and technology.
             </p>
           </div>
         </div>

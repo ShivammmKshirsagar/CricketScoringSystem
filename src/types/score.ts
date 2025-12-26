@@ -1,4 +1,3 @@
-import { BallEvent, Extras } from './match';
 
 export interface ScoreState {
   runs: number;
@@ -6,11 +5,8 @@ export interface ScoreState {
   overs: number;
   balls: number;
   extras: Extras;
-  currentRunRate: number;
-  requiredRunRate?: number;
   target?: number;
   ballEvents: BallEvent[];
-  lastSixBalls: BallEvent[];
 }
 
 export interface BatterStats {
@@ -50,4 +46,34 @@ export interface OverSummary {
   runs: number;
   wickets: number;
   balls: BallEvent[];
+}
+
+//One single definition of Ball
+export interface BallEvent {
+  runsOffBat: number;
+  ballType: BallType;
+  extraRuns: number;
+  isLegal: boolean;
+  isWicket: boolean;
+  wicketType?: WicketType;
+}
+
+export type WicketType = 
+  | 'bowled' 
+  | 'caught' 
+  | 'lbw' 
+  | 'run_out' 
+  | 'stumped' 
+  | 'hit_wicket'
+  | 'caught_behind'
+  | 'caught_and_bowled';
+
+export type BallType = 'normal' | 'wide' | 'no_ball' | 'bye' | 'leg_bye';
+
+export interface Extras {
+  wides: number;
+  noBalls: number;
+  byes: number;
+  legByes: number;
+  penalty: number;
 }

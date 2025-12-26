@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./Card";
-import { BallEvent, WicketType } from "@/types/match";
+import { BallEvent, WicketType, BallType } from "@/types/score";
 import { cn } from "@/lib/utils";
 import { X, RotateCcw, Check } from "lucide-react";
 
 interface BallInputPanelProps {
-  onBallRecorded: (event: Partial<BallEvent>) => void;
+  onBallRecorded: (event: BallEvent) => void;
   onUndo?: () => void;
   disabled?: boolean;
   className?: string;
@@ -44,21 +44,31 @@ export function BallInputPanel({
   };
 
   const handleConfirm = () => {
-    if (selectedRuns === null && !isWicket && !extraType) return;
-    
-    const event: Partial<BallEvent> = {
-      runs: selectedRuns || 0,
-      isWide: extraType === 'wide',
-      isNoBall: extraType === 'no_ball',
-      isBye: extraType === 'bye',
-      isLegBye: extraType === 'leg_bye',
-      isWicket,
-      wicketType: wicketType || undefined,
-    };
+  if (selectedRuns === null && !isWicket && !extraType) return;
 
-    onBallRecorded(event);
-    resetSelection();
+  let ballType: BallType = 'normal';
+  let extraRuns = 0;
+  let isLegal = true;
+
+  if (extraType) {
+    ballType = extraType;
+    extraRuns = selectedRuns ?? 1;
+    isLegal = extraType === 'bye' || extraType === 'leg_bye';
+  }
+
+  const ball: BallEvent = {
+    runsOffBat: extraType ? 0 : selectedRuns ?? 0,
+    ballType,
+    extraRuns,
+    isLegal,
+    isWicket,
+    wicketType: isWicket ? wicketType ?? undefined : undefined,
   };
+
+  onBallRecorded(ball);
+  resetSelection();
+};
+
 
   const resetSelection = () => {
     setSelectedRuns(null);

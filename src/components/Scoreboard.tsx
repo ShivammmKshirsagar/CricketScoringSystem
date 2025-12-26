@@ -1,25 +1,33 @@
 import { cn } from "@/lib/utils";
 import { ScoreState } from "@/types/score";
-import { formatOvers, getBallDisplayText } from "@/lib/scoreEngine";
+import { formatOvers } from "@/lib/scoreEngine";
 import { Card } from "./Card";
+import {
+  getBallDisplayText,
+  getCurrentRunRate,
+  getLastSixBalls,
+  getRequiredRunRate
+} from "@/lib/scoreSelectors"
 
 interface ScoreboardProps {
   teamName: string;
   score: ScoreState;
+  totalOvers: number;
   isLive?: boolean;
   target?: number;
   className?: string;
 }
 
-export function Scoreboard({ 
-  teamName, 
-  score, 
+export function Scoreboard({
+  teamName,
+  score,
+  totalOvers,
   isLive = false,
   target,
-  className 
+  className
 }: ScoreboardProps) {
   const oversDisplay = formatOvers(score.overs * 6 + score.balls);
-  
+
   return (
     <Card variant="glow" className={cn("relative overflow-hidden", className)}>
       {/* Live indicator */}
@@ -32,14 +40,14 @@ export function Scoreboard({
           <span className="text-xs font-semibold text-destructive uppercase tracking-wider">Live</span>
         </div>
       )}
-      
+
       {/* Team name */}
       <div className="mb-6">
         <h2 className="font-display text-lg font-medium text-muted-foreground">
           {teamName}
         </h2>
       </div>
-      
+
       {/* Main score display */}
       <div className="flex items-baseline gap-3 mb-4">
         <span className="score-display text-7xl font-display font-black text-foreground tracking-tight">
@@ -50,7 +58,7 @@ export function Scoreboard({
           {score.wickets}
         </span>
       </div>
-      
+
       {/* Overs */}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
@@ -63,46 +71,50 @@ export function Scoreboard({
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">RR</span>
           <span className="score-display text-xl font-display font-semibold text-primary">
-            {score.currentRunRate.toFixed(2)}
+            {getCurrentRunRate(score).toFixed(2)}
           </span>
         </div>
-        {target && score.requiredRunRate && (
+        {target && getRequiredRunRate(score, totalOvers) && (
           <>
             <div className="h-4 w-px bg-border"></div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">RRR</span>
               <span className="score-display text-xl font-display font-semibold text-accent">
-                {score.requiredRunRate.toFixed(2)}
+                {getRequiredRunRate(score, totalOvers).toFixed(2)}
               </span>
             </div>
           </>
         )}
       </div>
-      
+
       {/* This over */}
       <div className="pt-4 border-t border-border/50">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-muted-foreground">This Over</span>
           <span className="text-sm text-muted-foreground">
-            {score.lastSixBalls.reduce((sum, b) => sum + (b.runs || 0), 0)} runs
+            {getLastSixBalls(score).reduce(
+              (sum, b) => sum + b.runsOffBat + b.extraRuns,
+              0
+            )
+            } runs
           </span>
         </div>
         <div className="flex gap-2">
           {Array.from({ length: 6 }).map((_, index) => {
-            const ball = score.lastSixBalls[index];
+            const ball = getLastSixBalls(score)[index];
             return (
               <div
                 key={index}
                 className={cn(
                   "flex-1 h-10 rounded-lg flex items-center justify-center font-display font-bold text-sm transition-all",
                   ball ? (
-                    ball.isWicket 
-                      ? "bg-destructive/20 text-destructive border border-destructive/30" 
-                      : ball.isSix 
+                    ball.isWicket
+                      ? "bg-destructive/20 text-destructive border border-destructive/30"
+                      : ball.runsOffBat === 6
                         ? "bg-accent/20 text-accent border border-accent/30"
-                        : ball.isBoundary
+                        : ball.runsOffBat === 4
                           ? "bg-primary/20 text-primary border border-primary/30"
-                          : ball.isWide || ball.isNoBall
+                          : ball.ballType === "wide" || ball.ballType === "no_ball"
                             ? "bg-info/20 text-info border border-info/30"
                             : "bg-secondary text-foreground"
                   ) : "bg-secondary/50 text-muted-foreground border border-border/30"
@@ -114,7 +126,7 @@ export function Scoreboard({
           })}
         </div>
       </div>
-      
+
       {/* Extras summary */}
       <div className="mt-4 pt-4 border-t border-border/50">
         <div className="flex items-center gap-4 text-sm">
