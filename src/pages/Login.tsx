@@ -24,8 +24,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (isAuthenticated && user) {
-    return <Navigate to={user.role === "admin" ? "/admin" : "/customer"} replace />;
+  // If already authenticated as admin, redirect to admin panel
+  if (isAuthenticated && user?.role === "admin") {
+    return <Navigate to="/admin" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,13 +35,21 @@ export default function Login() {
 
     try {
       const authenticated = login({ username, password });
+      
+      // Only admins should use this login page
+      if (authenticated.role !== "admin") {
+        toast.error("This login is for administrators only");
+        setIsSubmitting(false);
+        return;
+      }
+
       const next = state.from?.pathname;
       if (next && next !== "/login") {
         navigate(next, { replace: true });
         return;
       }
 
-      navigate(authenticated.role === "admin" ? "/admin" : "/customer", { replace: true });
+      navigate("/admin", { replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -59,13 +68,11 @@ export default function Login() {
           </div>
 
           <Card variant="glow" className="animate-slide-up">
-            <h1 className="font-display text-2xl font-bold text-foreground">Sign in</h1>
+            <h1 className="font-display text-2xl font-bold text-foreground">Admin Sign In</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Use demo credentials:
+              Administrator access only.
               <br />
-              admin / admin123
-              <br />
-              customer / customer123
+              Demo credentials: <strong>admin / admin123</strong>
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -75,7 +82,7 @@ export default function Login() {
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin or customer"
+                  placeholder="admin"
                   autoComplete="username"
                   required
                   className="bg-secondary/50 border-border/50"
@@ -100,6 +107,17 @@ export default function Login() {
                 {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </form>
+
+            <div className="mt-4 text-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/")}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                ← Back to Matches
+              </Button>
+            </div>
           </Card>
         </div>
       </div>

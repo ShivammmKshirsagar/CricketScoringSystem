@@ -53,7 +53,7 @@ export default function CustomerMatches() {
                   <div className="text-sm text-muted-foreground">{m.venue}</div>
                 </div>
 
-                <Button variant="hero" size="sm" onClick={() => navigate(`/customer/matches/${m.id}`)}>
+                <Button variant="hero" size="sm" onClick={() => navigate(`/match/${m.id}`)}>
                   View Live
                 </Button>
               </Card>
@@ -82,7 +82,7 @@ export default function CustomerMatches() {
                   <div className="mt-1 text-sm text-muted-foreground">Scheduled: {formatWhen(m.scheduledAt)}</div>
                 </div>
 
-                <Button variant="outline" size="sm" onClick={() => navigate(`/customer/matches/${m.id}`)}>
+                <Button variant="outline" size="sm" onClick={() => navigate(`/match/${m.id}`)}>
                   Details
                 </Button>
               </Card>

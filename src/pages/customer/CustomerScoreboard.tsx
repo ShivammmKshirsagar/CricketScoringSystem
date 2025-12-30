@@ -13,7 +13,7 @@ export default function CustomerScoreboard() {
   const snapshot = useLiveScore(matchId ?? "");
 
   if (!matchId) {
-    return <Navigate to="/customer/matches" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!match) {
