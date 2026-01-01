@@ -196,7 +196,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Logo size="sm" />
             <p className="text-sm text-muted-foreground">
-              © 2026 CricketScore. Built with passion for cricket and technology.
+              © 2026 CricMitra. Built with passion for cricket and technology.
             </p>
           </div>
         </div>
