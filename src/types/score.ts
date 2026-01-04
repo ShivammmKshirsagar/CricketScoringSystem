@@ -7,6 +7,7 @@ export interface ScoreState {
   extras: Extras;
   target?: number;
   ballEvents: BallEvent[];
+  isFreeHit: boolean; // Free hit for next delivery
 }
 
 export interface BatterStats {
@@ -48,7 +49,7 @@ export interface OverSummary {
   balls: BallEvent[];
 }
 
-//One single definition of Ball
+// One single definition of Ball
 export interface BallEvent {
   runsOffBat: number;
   ballType: BallType;
@@ -56,6 +57,7 @@ export interface BallEvent {
   isLegal: boolean;
   isWicket: boolean;
   wicketType?: WicketType;
+  wasFreeHit: boolean; // Was this delivery a free hit
 }
 
 export type WicketType = 

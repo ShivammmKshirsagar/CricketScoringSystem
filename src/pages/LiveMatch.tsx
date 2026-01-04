@@ -86,11 +86,16 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
       toast.success(`${battingTeam.name} wins by ${10 - newScore.wickets} wickets!`);
     }
 
+    // Announce no-balls and free hits
+    if (event.ballType === 'no_ball') {
+      toast.error("NO BALL! Free Hit next delivery.", { duration: 2500 });
+    }
+
     // Announce boundaries and wickets
     if (event.isWicket) {
       toast.error("WICKET!", { duration: 2000 });
     } else if (event.runsOffBat === 6) {
-      toast.success("SIX! 🏏", { duration: 1500 });
+      toast.success("SIX! 🔥", { duration: 1500 });
     } else if (event.runsOffBat === 4) {
       toast.success("FOUR!", { duration: 1500 });
     }
@@ -224,6 +229,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
             <BallInputPanel
               onBallRecorded={handleBallRecorded}
               onUndo={handleUndo}
+              isFreeHit={currentScore.isFreeHit}
             />
           </div>
         </div>
