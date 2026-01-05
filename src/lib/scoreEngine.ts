@@ -112,6 +112,25 @@ export function applyBall(
 
   const newBallEvents = [...prevState.ballEvents, ball];
 
+  // Strike Rotation Logic
+  let currentStrikerId = prevState.currentStrikerId;
+  let currentNonStrikerId = prevState.currentNonStrikerId;
+
+  // 1. Rotate if odd runs scored by bat (and legal)
+  // Note: Wides/No Balls might have odd runs but don't typically rotate strike unless run taken.
+  // Simplifying assumption: rotations happen on odd runsOffBat.
+  if (ball.runsOffBat % 2 !== 0) {
+    [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
+  }
+
+  // 2. Rotate at end of over (if legal ball ended over)
+  if (isLegal && balls === 0 && overs > prevState.overs) {
+    [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
+  }
+
+  // 3. New batsman on wicket (handled by UI selection usually, but we could auto-place new striker if list known)
+  // For now, if wicket falls, we might keep IDs but UI will prompt to change Striker.
+
   return {
     runs: newRuns,
     wickets: newWickets,
@@ -120,5 +139,8 @@ export function applyBall(
     extras: calculateExtras(newBallEvents),
     target: prevState.target,
     ballEvents: newBallEvents,
+    currentStrikerId,
+    currentNonStrikerId,
+    currentBowlerId: prevState.currentBowlerId, // Bowler usually changes after over, handled by UI
   };
 }

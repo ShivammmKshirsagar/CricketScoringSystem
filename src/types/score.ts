@@ -7,6 +7,10 @@ export interface ScoreState {
   extras: Extras;
   target?: number;
   ballEvents: BallEvent[];
+  // Active player tracking
+  currentStrikerId?: string;
+  currentNonStrikerId?: string;
+  currentBowlerId?: string;
 }
 
 export interface BatterStats {
@@ -56,14 +60,17 @@ export interface BallEvent {
   isLegal: boolean;
   isWicket: boolean;
   wicketType?: WicketType;
+  // New fields for detailed tracking (Optional for backward compatibility)
+  batterId?: string;
+  bowlerId?: string;
 }
 
-export type WicketType = 
-  | 'bowled' 
-  | 'caught' 
-  | 'lbw' 
-  | 'run_out' 
-  | 'stumped' 
+export type WicketType =
+  | 'bowled'
+  | 'caught'
+  | 'lbw'
+  | 'run_out'
+  | 'stumped'
   | 'hit_wicket'
   | 'caught_behind'
   | 'caught_and_bowled';
@@ -76,4 +83,11 @@ export interface Extras {
   byes: number;
   legByes: number;
   penalty: number;
+}
+
+export interface PlayerStats {
+  runs: number;
+  balls: number;
+  fours: number;
+  sixes: number;
 }

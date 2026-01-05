@@ -5,6 +5,7 @@ import { MatchHeader } from "@/components/MatchHeader";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useLiveScore } from "@/hooks/useLiveScore";
 import { getMatch } from "@/lib/matchStore";
+import { ScorecardTable } from "@/components/ScorecardTable";
 
 export default function CustomerScoreboard() {
   const { matchId } = useParams();
@@ -64,17 +65,25 @@ export default function CustomerScoreboard() {
             totalOvers={match.overs}
           />
 
+          <ScorecardTable teamName={battingTeam.name} score={currentScore} />
+
           {snapshot.currentInnings === 2 && (
-            <Card variant="default" className="animate-fade-in">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  {match.tossDecision === "bat" ? match.team1.name : match.team2.name} (1st Innings)
-                </span>
-                <span className="score-display text-xl font-display font-bold text-foreground">
-                  {snapshot.innings1Score.runs}/{snapshot.innings1Score.wickets}
-                </span>
-              </div>
-            </Card>
+            <div className="space-y-6">
+              <Card variant="default" className="animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {match.tossDecision === "bat" ? match.team1.name : match.team2.name} (1st Innings)
+                  </span>
+                  <span className="score-display text-xl font-display font-bold text-foreground">
+                    {snapshot.innings1Score.runs}/{snapshot.innings1Score.wickets}
+                  </span>
+                </div>
+              </Card>
+              <ScorecardTable
+                teamName={match.tossDecision === "bat" ? match.team1.name : match.team2.name}
+                score={snapshot.innings1Score}
+              />
+            </div>
           )}
         </div>
 

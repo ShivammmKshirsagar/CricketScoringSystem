@@ -14,6 +14,7 @@ import { ArrowLeft, RotateCcw, Flag } from "lucide-react";
 import { toast } from "sonner";
 import { getOverSummaries } from "@/lib/scoreSelectors";
 import { getLiveScore, saveLiveScore } from "@/lib/liveScoreStore";
+import { PlayerSelect } from "@/components/PlayerSelect";
 
 interface LiveMatchProps {
   match: Match;
@@ -49,6 +50,10 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
     ? (match.tossDecision === 'bat' ? match.team1 : match.team2)
     : (match.tossDecision === 'bat' ? match.team2 : match.team1);
 
+  const bowlingTeam = currentInnings === 1
+    ? (match.tossDecision === 'bat' ? match.team2 : match.team1)
+    : (match.tossDecision === 'bat' ? match.team1 : match.team2);
+
   const currentScore = currentInnings === 1 ? innings1Score : innings2Score;
   const setCurrentScore = currentInnings === 1 ? setInnings1Score : setInnings2Score;
   const overSummaries = useMemo(
@@ -57,7 +62,14 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
   );
 
   const handleBallRecorded = useCallback((event: BallEvent) => {
-    const newScore = applyBall(currentScore, event);
+    // Attach current players to event
+    const eventWithPlayers = {
+      ...event,
+      batterId: currentScore.currentStrikerId,
+      bowlerId: currentScore.currentBowlerId,
+    };
+
+    const newScore = applyBall(currentScore, eventWithPlayers);
     setCurrentScore(newScore);
 
     // Check for innings end conditions
@@ -220,7 +232,37 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
           </div>
 
           {/* Ball Input Panel */}
-          <div>
+          <div className="space-y-6">
+            <Card variant="default">
+              <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">
+                Active Players
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <PlayerSelect
+                  label="Striker"
+                  teamId={battingTeam.id}
+                  value={currentScore.currentStrikerId}
+                  onChange={(id) => setCurrentScore(prev => ({ ...prev, currentStrikerId: id }))}
+                  excludeIds={currentScore.currentNonStrikerId ? [currentScore.currentNonStrikerId] : []}
+                />
+                <PlayerSelect
+                  label="Non-Striker"
+                  teamId={battingTeam.id}
+                  value={currentScore.currentNonStrikerId}
+                  onChange={(id) => setCurrentScore(prev => ({ ...prev, currentNonStrikerId: id }))}
+                  excludeIds={currentScore.currentStrikerId ? [currentScore.currentStrikerId] : []}
+                />
+                <div className="col-span-2">
+                  <PlayerSelect
+                    label="Bowler"
+                    teamId={bowlingTeam.id}
+                    value={currentScore.currentBowlerId}
+                    onChange={(id) => setCurrentScore(prev => ({ ...prev, currentBowlerId: id }))}
+                  />
+                </div>
+              </div>
+            </Card>
+
             <BallInputPanel
               onBallRecorded={handleBallRecorded}
               onUndo={handleUndo}

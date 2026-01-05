@@ -102,3 +102,110 @@ export function getRequiredRunRate(
   const runsNeeded = state.target - state.runs;
   return Number((runsNeeded / (ballsRemaining / 6)).toFixed(2));
 }
+
+export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
+  const stats: Record<string, {
+    id: string;
+    name: string;
+    runs: number;
+    balls: number;
+    fours: number;
+    sixes: number;
+    isOut: boolean;
+    isOnStrike: boolean;
+  }> = {};
+
+  // Initialize stats for players who have faced balls
+  state.ballEvents.forEach(ball => {
+    if (ball.batterId) {
+      if (!stats[ball.batterId]) {
+        const player = allPlayers.find(p => p.id === ball.batterId);
+        stats[ball.batterId] = {
+          id: ball.batterId,
+          name: player?.name ?? 'Unknown',
+          runs: 0,
+          balls: 0,
+          fours: 0,
+          sixes: 0,
+          isOut: false,
+          isOnStrike: false
+        };
+      }
+
+      if (ball.isLegal) {
+        stats[ball.batterId].balls++;
+      }
+      stats[ball.batterId].runs += ball.runsOffBat;
+      if (ball.runsOffBat === 4) stats[ball.batterId].fours++;
+      if (ball.runsOffBat === 6) stats[ball.batterId].sixes++;
+    }
+  });
+
+  // Mark active strikers
+  if (state.currentStrikerId && stats[state.currentStrikerId]) {
+    stats[state.currentStrikerId].isOnStrike = true;
+  }
+
+  // Handle wickets (TODO: associate wicket with batter more explicitly if needed)
+  // For now, if wicket falls, we assume striker is out (simplification unless runout)
+
+  return Object.values(stats);
+}
+
+export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
+  const stats: Record<string, {
+    id: string;
+    name: string;
+    overs: number;
+    balls: number; // partial over balls
+    maidens: number;
+    runs: number;
+    wickets: number;
+    wides: number;
+    noBalls: number;
+  }> = {};
+
+  state.ballEvents.forEach(ball => {
+    if (ball.bowlerId) {
+      if (!stats[ball.bowlerId]) {
+        const player = allPlayers.find(p => p.id === ball.bowlerId);
+        stats[ball.bowlerId] = {
+          id: ball.bowlerId,
+          name: player?.name ?? 'Unknown',
+          overs: 0,
+          balls: 0,
+          maidens: 0,
+          runs: 0,
+          wickets: 0,
+          wides: 0,
+          noBalls: 0
+        };
+      }
+
+      const s = stats[ball.bowlerId];
+
+      if (ball.ballType === 'wide') s.wides++;
+      if (ball.ballType === 'no_ball') s.noBalls++;
+
+      // Runs against bowler: runsOffBat + wides + no_balls (byes/legbyes don't count against bowler)
+      s.runs += ball.runsOffBat;
+      if (ball.ballType === 'wide' || ball.ballType === 'no_ball') {
+        s.runs += ball.extraRuns;
+      }
+
+      if (ball.isWicket && ball.wicketType !== 'run_out') {
+        s.wickets++;
+      }
+
+      if (ball.isLegal) {
+        s.balls++;
+        if (s.balls === 6) {
+          s.overs++;
+          s.balls = 0;
+        }
+      }
+    }
+  });
+
+  return Object.values(stats);
+}
