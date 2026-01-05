@@ -85,17 +85,41 @@ export function createInitialScoreState(): ScoreState {
     balls: 0,
     extras: { wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0 },
     ballEvents: [],
+    isFreeHit: false,
   };
 }
 
+/**
+ * Apply a ball event to the score state
+ * Implements proper cricket scoring rules:
+ * - No-balls automatically add +1 run as extra
+ * - No-balls trigger free hit for next legal delivery
+ * - Wickets cannot fall on free hit (except run-out)
+ * - Free hit continues through illegal deliveries
+ */
 export function applyBall(
   prevState: ScoreState,
   ball: BallEvent
 ): ScoreState {
-  const runsFromBall = calculateBallRuns(ball);
+  // CRICKET RULE: No-ball always adds +1 run automatically
+  let extraRuns = ball.extraRuns;
+  if (ball.ballType === 'no_ball') {
+    // If extra runs not specified, default to 1
+    // If specified, ensure minimum of 1
+    extraRuns = Math.max(1, ball.extraRuns);
+  }
+
+  // Calculate total runs from this ball
+  const runsFromBall = ball.runsOffBat + extraRuns;
   const isLegal = isLegalDelivery(ball);
 
-  // Update balls / overs
+  // CRICKET RULE: Wicket cannot fall on free hit (except run-out)
+  let actualWicket = ball.isWicket;
+  if (prevState.isFreeHit && ball.isWicket && ball.wicketType !== 'run_out') {
+    actualWicket = false; // Nullify non-run-out dismissals on free hit
+  }
+
+  // Update balls / overs (only for legal deliveries)
   let overs = prevState.overs;
   let balls = prevState.balls;
 
@@ -107,18 +131,41 @@ export function applyBall(
     }
   }
 
-  const newRuns = prevState.runs + runsFromBall;
-  const newWickets = prevState.wickets + (ball.isWicket ? 1 : 0);
+  // CRICKET RULE: Free hit logic
+  // - Set free hit after no-ball
+  // - Consume free hit after legal delivery
+  // - Free hit persists through illegal deliveries (wide, no-ball)
+  let nextFreeHit = false;
 
-  const newBallEvents = [...prevState.ballEvents, ball];
+  if (ball.ballType === 'no_ball') {
+    // No-ball triggers free hit for next legal delivery
+    nextFreeHit = true;
+  } else if (isLegal) {
+    // Legal delivery consumes free hit
+    nextFreeHit = false;
+  } else {
+    // Illegal deliveries (wide) preserve free hit state
+    nextFreeHit = prevState.isFreeHit;
+  }
+
+  const newRuns = prevState.runs + runsFromBall;
+  const newWickets = prevState.wickets + (actualWicket ? 1 : 0);
+
+  // Create the ball event with free hit flag
+  const recordedBall: BallEvent = {
+    ...ball,
+    extraRuns,
+    isWicket: actualWicket,
+    wasFreeHit: prevState.isFreeHit,
+  };
+
+  const newBallEvents = [...prevState.ballEvents, recordedBall];
 
   // Strike Rotation Logic
   let currentStrikerId = prevState.currentStrikerId;
   let currentNonStrikerId = prevState.currentNonStrikerId;
 
   // 1. Rotate if odd runs scored by bat (and legal)
-  // Note: Wides/No Balls might have odd runs but don't typically rotate strike unless run taken.
-  // Simplifying assumption: rotations happen on odd runsOffBat.
   if (ball.runsOffBat % 2 !== 0) {
     [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
   }
@@ -127,9 +174,6 @@ export function applyBall(
   if (isLegal && balls === 0 && overs > prevState.overs) {
     [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
   }
-
-  // 3. New batsman on wicket (handled by UI selection usually, but we could auto-place new striker if list known)
-  // For now, if wicket falls, we might keep IDs but UI will prompt to change Striker.
 
   return {
     runs: newRuns,
@@ -141,6 +185,7 @@ export function applyBall(
     ballEvents: newBallEvents,
     currentStrikerId,
     currentNonStrikerId,
-    currentBowlerId: prevState.currentBowlerId, // Bowler usually changes after over, handled by UI
+    currentBowlerId: prevState.currentBowlerId,
+    isFreeHit: nextFreeHit,
   };
 }

@@ -6,8 +6,9 @@ import { Card } from "@/components/Card";
 import { AdminMatchModal } from "@/components/AdminMatchModal";
 import { useMatches } from "@/hooks/useMatches";
 import { deleteMatch, upsertMatch, updateMatch } from "@/lib/matchStore";
-import { getLiveScore } from "@/lib/liveScoreStore";
+import { getLiveScore, clearLiveScore } from "@/lib/liveScoreStore";
 import { Match } from "@/types/match";
+import { toast } from "sonner";
 
 function formatWhen(d?: Date) {
   if (!d) return "-";
@@ -34,6 +35,34 @@ export default function AdminMatches() {
     if (showArchived) return sorted;
     return sorted.filter((m) => !m.archived);
   }, [sorted, showArchived]);
+
+  const handleDeleteMatch = (match: Match) => {
+    const scoringStarted = !!getLiveScore(match.id);
+    
+    // Build confirmation message based on match state
+    let confirmMessage = `Delete "${match.team1.shortName} vs ${match.team2.shortName}"?`;
+    if (scoringStarted) {
+      confirmMessage += "\n\n⚠️ This match has scoring data that will be permanently deleted.";
+    }
+    confirmMessage += "\n\nThis action cannot be undone.";
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Clear live score data if exists
+        if (scoringStarted) {
+          clearLiveScore(match.id);
+        }
+        
+        // Delete the match
+        deleteMatch(match.id);
+        
+        toast.success("Match deleted successfully");
+      } catch (error) {
+        console.error("Failed to delete match:", error);
+        toast.error("Failed to delete match. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -71,7 +100,6 @@ export default function AdminMatches() {
           {visible.map((m) => {
             const scoringStarted = !!getLiveScore(m.id);
             const canEdit = !scoringStarted;
-            const canDelete = !scoringStarted;
             const canScore = m.status === "live";
 
             return (
@@ -187,8 +215,7 @@ export default function AdminMatches() {
                   <Button
                     size="sm"
                     variant="destructive"
-                    disabled={!canDelete}
-                    onClick={() => deleteMatch(m.id)}
+                    onClick={() => handleDeleteMatch(m)}
                   >
                     Delete
                   </Button>

@@ -3,13 +3,14 @@ import { Button } from "./ui/button";
 import { Card } from "./Card";
 import { BallEvent, WicketType, BallType } from "@/types/score";
 import { cn } from "@/lib/utils";
-import { X, RotateCcw, Check } from "lucide-react";
+import { X, RotateCcw, Check, Zap } from "lucide-react";
 
 interface BallInputPanelProps {
   onBallRecorded: (event: BallEvent) => void;
   onUndo?: () => void;
   disabled?: boolean;
   className?: string;
+  isFreeHit?: boolean;
 }
 
 type ExtraType = 'wide' | 'no_ball' | 'bye' | 'leg_bye' | null;
@@ -18,7 +19,8 @@ export function BallInputPanel({
   onBallRecorded, 
   onUndo,
   disabled = false,
-  className 
+  className,
+  isFreeHit = false,
 }: BallInputPanelProps) {
   const [selectedRuns, setSelectedRuns] = useState<number | null>(null);
   const [extraType, setExtraType] = useState<ExtraType>(null);
@@ -37,38 +39,53 @@ export function BallInputPanel({
 
   const handleWicketToggle = () => {
     if (disabled) return;
-    setIsWicket(!isWicket);
-    if (isWicket) {
-      setWicketType(null);
+    // On free hit, only allow run-out
+    if (isFreeHit) {
+      setIsWicket(!isWicket);
+      if (!isWicket) {
+        setWicketType('run_out');
+      } else {
+        setWicketType(null);
+      }
+    } else {
+      setIsWicket(!isWicket);
+      if (isWicket) {
+        setWicketType(null);
+      }
     }
   };
 
   const handleConfirm = () => {
-  if (selectedRuns === null && !isWicket && !extraType) return;
+    if (selectedRuns === null && !isWicket && !extraType) return;
 
-  let ballType: BallType = 'normal';
-  let extraRuns = 0;
-  let isLegal = true;
+    let ballType: BallType = 'normal';
+    let extraRuns = 0;
+    let isLegal = true;
 
-  if (extraType) {
-    ballType = extraType;
-    extraRuns = selectedRuns ?? 1;
-    isLegal = extraType === 'bye' || extraType === 'leg_bye';
-  }
+    if (extraType) {
+      ballType = extraType;
+      
+      // For no-ball: extraRuns from selection, but engine will ensure minimum +1
+      // For wide: extraRuns from selection (default 1)
+      // For bye/leg-bye: extraRuns from selection
+      extraRuns = selectedRuns ?? (extraType === 'wide' ? 1 : 0);
+      
+      isLegal = extraType === 'bye' || extraType === 'leg_bye';
+    }
 
-  const ball: BallEvent = {
-    runsOffBat: extraType ? 0 : selectedRuns ?? 0,
-    ballType,
-    extraRuns,
-    isLegal,
-    isWicket,
-    wicketType: isWicket ? wicketType ?? undefined : undefined,
+    const ball: BallEvent = {
+      runsOffBat: extraType ? 0 : selectedRuns ?? 0,
+      ballType,
+      extraRuns,
+      isLegal,
+      isWicket,
+      wicketType: isWicket ? wicketType ?? undefined : undefined,
+      wasFreeHit: isFreeHit,
+    };
+
+    onBallRecorded(ball);
+    resetSelection();
   };
-
-  onBallRecorded(ball);
-  resetSelection();
-};
-
 
   const resetSelection = () => {
     setSelectedRuns(null);
@@ -85,6 +102,22 @@ export function BallInputPanel({
 
   return (
     <Card variant="glass" className={cn("", className)}>
+      {/* Free Hit Indicator */}
+      {isFreeHit && (
+        <div className="mb-6 p-4 rounded-xl bg-accent/20 border-2 border-accent animate-pulse">
+          <div className="flex items-center justify-center gap-2">
+            <Zap className="h-5 w-5 text-accent" />
+            <span className="font-display text-lg font-bold text-accent uppercase tracking-wider">
+              Free Hit
+            </span>
+            <Zap className="h-5 w-5 text-accent" />
+          </div>
+          <p className="text-xs text-center text-muted-foreground mt-1">
+            Batter cannot be dismissed (except run-out)
+          </p>
+        </div>
+      )}
+
       {/* Runs selection */}
       <div className="mb-6">
         <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
@@ -132,6 +165,11 @@ export function BallInputPanel({
             </Button>
           ))}
         </div>
+        {extraType === 'no_ball' && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            ℹ️ No-ball adds +1 run automatically (plus any runs off bat)
+          </p>
+        )}
       </div>
 
       {/* Wicket */}
@@ -146,7 +184,7 @@ export function BallInputPanel({
           className={cn("w-full ball-button h-12 text-base", isWicket && "shadow-lg")}
         >
           <X className={cn("h-5 w-5", isWicket && "text-destructive-foreground")} />
-          Wicket
+          Wicket {isFreeHit && "(Run-out only)"}
         </Button>
         
         {isWicket && (
@@ -156,8 +194,11 @@ export function BallInputPanel({
                 key={type}
                 variant={wicketType === type ? "wicket" : "outline"}
                 onClick={() => setWicketType(type)}
-                disabled={disabled}
-                className="ball-button text-xs h-9 capitalize"
+                disabled={disabled || (isFreeHit && type !== 'run_out')}
+                className={cn(
+                  "ball-button text-xs h-9 capitalize",
+                  isFreeHit && type !== 'run_out' && "opacity-30 cursor-not-allowed"
+                )}
               >
                 {type.replace('_', ' ')}
               </Button>
@@ -206,6 +247,7 @@ export function BallInputPanel({
             <span className="font-semibold text-foreground ml-2">
               {selectedRuns !== null && `${selectedRuns} run${selectedRuns !== 1 ? 's' : ''}`}
               {extraType && ` + ${extraType.replace('_', ' ')}`}
+              {extraType === 'no_ball' && ' (+1 auto)'}
               {isWicket && ` + Wicket${wicketType ? ` (${wicketType})` : ''}`}
             </span>
           </div>

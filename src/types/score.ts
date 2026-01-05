@@ -11,6 +11,7 @@ export interface ScoreState {
   currentStrikerId?: string;
   currentNonStrikerId?: string;
   currentBowlerId?: string;
+  isFreeHit: boolean; // Free hit for next delivery
 }
 
 export interface BatterStats {
@@ -52,7 +53,7 @@ export interface OverSummary {
   balls: BallEvent[];
 }
 
-//One single definition of Ball
+// One single definition of Ball
 export interface BallEvent {
   runsOffBat: number;
   ballType: BallType;
@@ -63,6 +64,7 @@ export interface BallEvent {
   // New fields for detailed tracking (Optional for backward compatibility)
   batterId?: string;
   bowlerId?: string;
+  wasFreeHit: boolean; // Was this delivery a free hit
 }
 
 export type WicketType =
