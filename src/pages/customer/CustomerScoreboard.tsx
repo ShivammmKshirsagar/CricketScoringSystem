@@ -65,6 +65,15 @@ export default function CustomerScoreboard() {
             totalOvers={match.overs}
           />
 
+          <Card variant="default">
+            <div className="text-sm text-muted-foreground">Last updated</div>
+            <div className="mt-1 font-medium text-foreground">
+              {new Date(snapshot.updatedAt).toLocaleString()}
+            </div>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
           <ScorecardTable teamName={battingTeam.name} score={currentScore} />
 
           {snapshot.currentInnings === 2 && (
@@ -85,15 +94,6 @@ export default function CustomerScoreboard() {
               />
             </div>
           )}
-        </div>
-
-        <div>
-          <Card variant="default">
-            <div className="text-sm text-muted-foreground">Last updated</div>
-            <div className="mt-1 font-medium text-foreground">
-              {new Date(snapshot.updatedAt).toLocaleString()}
-            </div>
-          </Card>
         </div>
       </div>
     </div>
