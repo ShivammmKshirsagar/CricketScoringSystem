@@ -115,9 +115,29 @@ export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
     isOnStrike: boolean;
   }> = {};
 
-  // Initialize stats for players who have faced balls
+  // FIXED: Initialize stats for currently selected batters (even with 0 balls)
+  const selectedBatterIds = new Set<string>();
+  if (state.currentStrikerId) selectedBatterIds.add(state.currentStrikerId);
+  if (state.currentNonStrikerId) selectedBatterIds.add(state.currentNonStrikerId);
+
+  selectedBatterIds.forEach(batterId => {
+    const player = allPlayers.find(p => p.id === batterId);
+    stats[batterId] = {
+      id: batterId,
+      name: player?.name ?? 'Unknown',
+      runs: 0,
+      balls: 0,
+      fours: 0,
+      sixes: 0,
+      isOut: false,
+      isOnStrike: batterId === state.currentStrikerId
+    };
+  });
+
+  // Update stats from ball events
   state.ballEvents.forEach(ball => {
     if (ball.batterId) {
+      // Initialize if not already present (for batters who are no longer active)
       if (!stats[ball.batterId]) {
         const player = allPlayers.find(p => p.id === ball.batterId);
         stats[ball.batterId] = {
@@ -141,13 +161,10 @@ export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
     }
   });
 
-  // Mark active strikers
-  if (state.currentStrikerId && stats[state.currentStrikerId]) {
-    stats[state.currentStrikerId].isOnStrike = true;
-  }
-
-  // Handle wickets (TODO: associate wicket with batter more explicitly if needed)
-  // For now, if wicket falls, we assume striker is out (simplification unless runout)
+  // Mark current striker (already done in initialization, but update in case of rotation)
+  Object.keys(stats).forEach(id => {
+    stats[id].isOnStrike = id === state.currentStrikerId;
+  });
 
   return Object.values(stats);
 }
@@ -165,8 +182,26 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
     noBalls: number;
   }> = {};
 
+  // FIXED: Initialize stats for currently selected bowler (even with 0 balls)
+  if (state.currentBowlerId) {
+    const player = allPlayers.find(p => p.id === state.currentBowlerId);
+    stats[state.currentBowlerId] = {
+      id: state.currentBowlerId,
+      name: player?.name ?? 'Unknown',
+      overs: 0,
+      balls: 0,
+      maidens: 0,
+      runs: 0,
+      wickets: 0,
+      wides: 0,
+      noBalls: 0
+    };
+  }
+
+  // Update stats from ball events
   state.ballEvents.forEach(ball => {
     if (ball.bowlerId) {
+      // Initialize if not already present (for bowlers who are no longer active)
       if (!stats[ball.bowlerId]) {
         const player = allPlayers.find(p => p.id === ball.bowlerId);
         stats[ball.bowlerId] = {
