@@ -105,7 +105,7 @@ export function AdminMatchModal({ isOpen, onClose, initialMatch, onSave }: Admin
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
 
-      <Card variant="glow" className="relative z-10 w-full max-w-lg animate-slide-up">
+      <Card variant="flat" className="relative z-10 w-full max-w-lg animate-slide-up">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-display text-2xl font-bold text-foreground">
             {isEdit ? "Update Match" : "Create / Schedule Match"}

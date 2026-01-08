@@ -11,11 +11,11 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon: Icon, title, description, className }: FeatureCardProps) {
   return (
-    <Card variant="glass" className={cn("group hover:border-primary/30 transition-all duration-300", className)}>
-      <div className="mb-4 inline-flex p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
-        <Icon className="h-6 w-6" />
+    <Card variant="flat" className={cn("group hover:border-primary/40 p-5", className)}>
+      <div className="mb-3 inline-flex p-2.5 rounded-lg bg-primary/10 text-primary">
+        <Icon className="h-5 w-5" />
       </div>
-      <h3 className="font-display text-lg font-bold text-foreground mb-2">
+      <h3 className="font-display text-base font-semibold text-foreground mb-1.5">
         {title}
       </h3>
       <p className="text-sm text-muted-foreground leading-relaxed">

@@ -10,9 +10,7 @@ export default function AdminHome() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="hero-glow" />
-
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Logo size="sm" />
@@ -35,7 +33,7 @@ export default function AdminHome() {
       </header>
 
       <main className="container mx-auto px-4 py-10">
-        <Card variant="glow" className="max-w-2xl">
+        <Card variant="flat" className="max-w-2xl">
           <h1 className="font-display text-3xl font-black text-foreground">Admin View</h1>
           <p className="mt-2 text-muted-foreground">
             This is the admin area. Put admin-only features here (manage users, matches, settings, etc.).

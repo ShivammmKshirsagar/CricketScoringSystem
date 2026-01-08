@@ -45,7 +45,7 @@ export default function CustomerMatches() {
         ) : (
           <div className="grid gap-4">
             {live.map((m) => (
-              <Card key={m.id} variant="glow" className="flex items-start justify-between gap-4">
+              <Card key={m.id} variant="flat" className="flex items-start justify-between gap-4">
                 <div>
                   <div className="font-display text-xl font-bold text-foreground">
                     {m.team1.shortName} vs {m.team2.shortName}

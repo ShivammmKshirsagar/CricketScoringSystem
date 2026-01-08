@@ -11,6 +11,20 @@ import { Input } from "@/components/ui/input";
 import { Plus, X, Check } from "lucide-react";
 import { usePlayers } from "@/hooks/usePlayers";
 import { addPlayer } from "@/lib/playerStore";
+import { Badge } from "@/components/ui/badge";
+
+const FAMOUS_PLAYERS = [
+    "Virat Kohli",
+    "Rohit Sharma",
+    "MS Dhoni",
+    "Sachin Tendulkar",
+    "Jasprit Bumrah",
+    "Hardik Pandya",
+    "Ravindra Jadeja",
+    "KL Rahul",
+    "Shubman Gill",
+    "Rishabh Pant"
+];
 
 interface PlayerSelectProps {
     teamId: string;
@@ -50,23 +64,45 @@ export function PlayerSelect({
             {label && <label className="text-sm font-medium text-muted-foreground">{label}</label>}
 
             {isAdding ? (
-                <div className="flex items-center gap-2">
-                    <Input
-                        value={newPlayerName}
-                        onChange={(e) => setNewPlayerName(e.target.value)}
-                        placeholder="New player name..."
-                        className="h-9"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") handleAddPlayer();
-                        }}
-                    />
-                    <Button size="icon" variant="ghost" className="h-9 w-9" onClick={handleAddPlayer}>
-                        <Check className="h-4 w-4 text-primary" />
-                    </Button>
-                    <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => setIsAdding(false)}>
-                        <X className="h-4 w-4" />
-                    </Button>
-                </div>
+                <>
+                    <div className="flex items-center gap-2">
+                        <Input
+                            value={newPlayerName}
+                            onChange={(e) => setNewPlayerName(e.target.value)}
+                            placeholder="New player name..."
+                            className="h-9"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleAddPlayer();
+                            }}
+                        />
+                        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={handleAddPlayer}>
+                            <Check className="h-4 w-4 text-primary" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => setIsAdding(false)}>
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <div className="mt-3">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Popular Stars:</p>
+                        <div className="flex flex-wrap gap-2">
+                            {FAMOUS_PLAYERS.map(name => (
+                                <Badge
+                                    key={name}
+                                    variant="secondary"
+                                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-2 py-0.5 text-xs"
+                                    onClick={() => {
+                                        const player = addPlayer(teamId, name);
+                                        onChange(player.id);
+                                        setIsAdding(false);
+                                    }}
+                                >
+                                    {name}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </>
             ) : (
                 <div className="flex items-center gap-2">
                     <Select value={value} onValueChange={onChange} disabled={disabled}>

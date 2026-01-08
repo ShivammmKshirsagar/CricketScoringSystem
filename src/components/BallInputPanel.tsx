@@ -60,21 +60,40 @@ export function BallInputPanel({
 
     let ballType: BallType = 'normal';
     let extraRuns = 0;
+    let runsOffBat = selectedRuns ?? 0;
     let isLegal = true;
 
     if (extraType) {
       ballType = extraType;
       
-      // For no-ball: extraRuns from selection, but engine will ensure minimum +1
-      // For wide: extraRuns from selection (default 1)
-      // For bye/leg-bye: extraRuns from selection
-      extraRuns = selectedRuns ?? (extraType === 'wide' ? 1 : 0);
-      
-      isLegal = extraType === 'bye' || extraType === 'leg_bye';
+      if (extraType === 'no_ball') {
+        // NO-BALL LOGIC:
+        // - runsOffBat = runs scored by bat (e.g., 2)
+        // - extraRuns = 0 (engine will add mandatory +1)
+        // - Total will be: runsOffBat + 1 (auto by engine)
+        runsOffBat = selectedRuns ?? 0;
+        extraRuns = 0; // Engine enforces minimum +1
+        isLegal = false;
+      } else if (extraType === 'wide') {
+        // WIDE LOGIC:
+        // - No runs off bat
+        // - extraRuns = selected runs or default 1
+        runsOffBat = 0;
+        extraRuns = selectedRuns ?? 1;
+        isLegal = false;
+      } else if (extraType === 'bye' || extraType === 'leg_bye') {
+        // BYE/LEG-BYE LOGIC:
+        // - No runs off bat (ball didn't touch bat)
+        // - extraRuns = selected runs
+        // - Legal delivery
+        runsOffBat = 0;
+        extraRuns = selectedRuns ?? 0;
+        isLegal = true;
+      }
     }
 
     const ball: BallEvent = {
-      runsOffBat: extraType ? 0 : selectedRuns ?? 0,
+      runsOffBat,
       ballType,
       extraRuns,
       isLegal,
@@ -101,7 +120,7 @@ export function BallInputPanel({
   const hasSelection = selectedRuns !== null || isWicket || extraType;
 
   return (
-    <Card variant="glass" className={cn("", className)}>
+    <Card variant="flat" className={cn("", className)}>
       {/* Free Hit Indicator */}
       {isFreeHit && (
         <div className="mb-6 p-4 rounded-xl bg-accent/20 border-2 border-accent animate-pulse">

@@ -4,18 +4,17 @@ import { ReactNode } from "react";
 interface CardProps {
   children: ReactNode;
   className?: string;
-  variant?: 'default' | 'glass' | 'glow';
+  variant?: 'default' | 'flat';
 }
 
 export function Card({ children, className, variant = 'default' }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl p-6 transition-all duration-300",
+        "rounded-xl p-6 transition-all duration-200",
         {
-          'bg-card border border-border shadow-card': variant === 'default',
-          'glass-card': variant === 'glass',
-          'glass-card glow-effect': variant === 'glow',
+          'bg-card border border-border': variant === 'default',
+          'flat-card': variant === 'flat',
         },
         className
       )}

@@ -6,77 +6,68 @@
 
 @layer base {
   :root {
-    /* Cricket-themed dark palette */
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    /* Deep Navy Dark Theme - inspired by ZEMO */
+    --background: 216 50% 7%;
+    --foreground: 210 40% 96%;
 
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
+    --card: 216 45% 11%;
+    --card-foreground: 210 40% 96%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 216 45% 10%;
+    --popover-foreground: 210 40% 96%;
 
-    /* Cricket Green Primary */
-    --primary: 142 70% 45%;
-    --primary-foreground: 222 47% 6%;
-    --primary-glow: 142 70% 55%;
+    /* Cyan/Teal Primary */
+    --primary: 187 100% 42%;
+    --primary-foreground: 216 50% 7%;
+    --primary-glow: 187 100% 50%;
 
-    /* Slate Blue Secondary */
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
+    /* Dark Blue Secondary */
+    --secondary: 216 40% 15%;
+    --secondary-foreground: 210 40% 96%;
 
-    --muted: 215 28% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 216 35% 13%;
+    --muted-foreground: 216 20% 55%;
 
-    /* Accent - Warm Gold */
-    --accent: 45 93% 58%;
-    --accent-foreground: 222 47% 6%;
+    /* Accent - Bright Cyan */
+    --accent: 187 100% 42%;
+    --accent-foreground: 216 50% 7%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
     /* Warning - for wickets */
     --warning: 25 95% 53%;
-    --warning-foreground: 222 47% 6%;
+    --warning-foreground: 216 50% 7%;
 
     /* Info - for extras */
-    --info: 199 89% 48%;
-    --info-foreground: 222 47% 6%;
+    --info: 187 100% 42%;
+    --info-foreground: 216 50% 7%;
 
-    --border: 215 28% 18%;
-    --input: 215 28% 15%;
-    --ring: 142 70% 45%;
+    --border: 216 35% 20%;
+    --input: 216 40% 14%;
+    --ring: 187 100% 42%;
 
     --radius: 0.75rem;
 
-    /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(142 70% 45%), hsl(142 70% 35%));
-    --gradient-card: linear-gradient(145deg, hsl(222 47% 11%), hsl(222 47% 7%));
-    --gradient-glass: linear-gradient(135deg, hsl(215 28% 20% / 0.4), hsl(215 28% 12% / 0.2));
-    --gradient-hero: radial-gradient(ellipse at top, hsl(142 70% 20% / 0.15), transparent 50%);
-    --gradient-glow: radial-gradient(circle, hsl(142 70% 45% / 0.2), transparent 70%);
-
     /* Shadows */
-    --shadow-sm: 0 2px 8px hsl(222 47% 4% / 0.3);
-    --shadow-md: 0 4px 16px hsl(222 47% 4% / 0.4);
-    --shadow-lg: 0 8px 32px hsl(222 47% 4% / 0.5);
-    --shadow-glow: 0 0 40px hsl(142 70% 45% / 0.15);
-    --shadow-card: 0 4px 24px hsl(222 47% 4% / 0.6), inset 0 1px 0 hsl(215 28% 25% / 0.2);
+    --shadow-sm: 0 2px 8px hsl(216 50% 3% / 0.4);
+    --shadow-md: 0 4px 16px hsl(216 50% 3% / 0.5);
+    --shadow-lg: 0 8px 32px hsl(216 50% 3% / 0.6);
 
     /* Sidebar */
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 142 70% 45%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 215 28% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 28% 18%;
-    --sidebar-ring: 142 70% 45%;
+    --sidebar-background: 216 45% 9%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 187 100% 42%;
+    --sidebar-primary-foreground: 216 50% 7%;
+    --sidebar-accent: 216 40% 15%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 216 35% 20%;
+    --sidebar-ring: 187 100% 42%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    --background: 216 50% 7%;
+    --foreground: 210 40% 96%;
   }
 }
 
@@ -96,33 +87,15 @@
 }
 
 @layer components {
-  .glass-card {
-    @apply relative overflow-hidden rounded-2xl border border-border/50;
-    background: var(--gradient-glass);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-card);
+  /* Clean flat card style - matches ZEMO aesthetic */
+  .flat-card {
+    @apply rounded-xl border border-border bg-card;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .glass-card::before {
-    content: '';
-    @apply absolute inset-0 pointer-events-none;
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, transparent 50%);
-  }
-
-  .glow-effect {
-    @apply relative;
-  }
-
-  .glow-effect::after {
-    content: '';
-    @apply absolute -inset-1 rounded-2xl opacity-0 transition-opacity duration-300;
-    background: var(--gradient-glow);
-    filter: blur(20px);
-    z-index: -1;
-  }
-
-  .glow-effect:hover::after {
-    @apply opacity-100;
+  .flat-card:hover {
+    border-color: hsl(var(--border) / 0.8);
   }
 
   .score-display {
@@ -131,15 +104,6 @@
     letter-spacing: -0.02em;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-  }
-
-  .hero-glow {
-    @apply absolute inset-0 pointer-events-none;
-    background: var(--gradient-hero);
-  }
 
   .ball-button {
     @apply relative overflow-hidden transition-all duration-200 ease-out;

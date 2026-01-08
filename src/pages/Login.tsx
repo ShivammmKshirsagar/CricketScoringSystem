@@ -59,15 +59,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="hero-glow" />
-
       <div className="container mx-auto px-4 py-10">
         <div className="mx-auto max-w-md">
           <div className="mb-8 flex justify-center">
             <Logo />
           </div>
 
-          <Card variant="glow" className="animate-slide-up">
+          <Card variant="flat" className="animate-slide-up">
             <h1 className="font-display text-2xl font-bold text-foreground">Admin Sign In</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Administrator access only.

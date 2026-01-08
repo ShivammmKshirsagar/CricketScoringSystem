@@ -29,7 +29,7 @@ export function Scoreboard({
   const oversDisplay = formatOvers(score.overs * 6 + score.balls);
 
   return (
-    <Card variant="glow" className={cn("relative overflow-hidden", className)}>
+    <Card variant="flat" className={cn("relative overflow-hidden", className)}>
       {/* Live indicator */}
       {isLive && (
         <div className="absolute top-4 right-4 flex items-center gap-2">

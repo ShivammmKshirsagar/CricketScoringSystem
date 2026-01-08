@@ -61,7 +61,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
       />
       
       {/* Modal */}
-      <Card variant="glow" className="relative z-10 w-full max-w-lg animate-slide-up">
+      <Card variant="flat" className="relative z-10 w-full max-w-lg animate-slide-up">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-display text-2xl font-bold text-foreground">
             Create New Match

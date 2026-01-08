@@ -37,12 +37,9 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
-      {/* Hero glow effect */}
-      <div className="hero-glow" />
-      
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <header className="relative z-10 border-b border-border/50 bg-background/50 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Logo />
@@ -72,53 +69,53 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative z-10 py-24 lg:py-32">
+      <section className="py-20 lg:py-28">
         <div className="container mx-auto px-4 text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8">
             <Zap className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-primary">Real-time Cricket Scoring</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-black text-foreground mb-6 tracking-tight animate-slide-up">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6 tracking-tight">
             Score Cricket Matches
             <br />
-            <span className="text-gradient">Like Never Before</span>
+            <span className="text-primary">Like Never Before</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
             A premium, real-time cricket scoring application. Track every ball, every run, 
             every wicket with precision and style.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button variant="hero" size="xl" onClick={() => setIsModalOpen(true)}>
               <Play className="h-5 w-5 mr-2" />
               Start New Match
             </Button>
-            <Button variant="glass" size="xl">
+            <Button variant="outline" size="xl">
               <Trophy className="h-5 w-5 mr-2" />
               View Demo
             </Button>
           </div>
 
           {/* Stats */}
-          <div className="flex items-center justify-center gap-8 md:gap-16 mt-16 pt-16 border-t border-border/50 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <div className="flex items-center justify-center gap-8 md:gap-16 mt-16 pt-16 border-t border-border">
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">1000+</div>
+              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">1000+</div>
               <div className="text-sm text-muted-foreground mt-1">Balls Scored</div>
             </div>
-            <div className="h-12 w-px bg-border/50"></div>
+            <div className="h-10 w-px bg-border"></div>
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">50+</div>
+              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">50+</div>
               <div className="text-sm text-muted-foreground mt-1">Matches</div>
             </div>
-            <div className="h-12 w-px bg-border/50"></div>
+            <div className="h-10 w-px bg-border"></div>
             <div className="text-center">
-              <div className="score-display text-4xl md:text-5xl font-display font-black text-foreground">100%</div>
+              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">100%</div>
               <div className="text-sm text-muted-foreground mt-1">Uptime</div>
             </div>
           </div>
@@ -126,10 +123,10 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="relative z-10 py-24 border-t border-border/50">
+      <section className="py-20 border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
               Everything You Need
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -137,7 +134,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <FeatureCard
               icon={Zap}
               title="Real-time Updates"
@@ -173,16 +170,16 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-24 border-t border-border/50">
+      <section className="py-20 border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="glass-card glow-effect max-w-4xl mx-auto p-12 text-center">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <div className="flat-card max-w-4xl mx-auto p-10 text-center">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
               Ready to Score?
             </h2>
             <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
               Start scoring your cricket matches with precision. It's free, fast, and beautiful.
             </p>
-            <Button variant="hero" size="xl" onClick={() => setIsModalOpen(true)}>
+            <Button variant="hero" size="lg" onClick={() => setIsModalOpen(true)}>
               <Play className="h-5 w-5 mr-2" />
               Create Your First Match
             </Button>
@@ -191,7 +188,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-border/50 py-8">
+      <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <Logo size="sm" />

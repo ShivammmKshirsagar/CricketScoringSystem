@@ -146,11 +146,8 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero glow effect */}
-      <div className="hero-glow" />
-
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

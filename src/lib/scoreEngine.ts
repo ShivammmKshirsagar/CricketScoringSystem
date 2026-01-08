@@ -115,6 +115,13 @@ export function applyBall(
 
   // CRICKET RULE: Wicket cannot fall on free hit (except run-out)
   let actualWicket = ball.isWicket;
+
+  // Special Rule: On No-Ball, only run-out is valid
+  if (ball.ballType === 'no_ball' && ball.isWicket && ball.wicketType !== 'run_out') {
+    actualWicket = false; // Nullify non-run-out dismissals on no-ball
+  }
+
+  // Free Hit Rule: Verify same logic (redundant but safe to keep explicit)
   if (prevState.isFreeHit && ball.isWicket && ball.wicketType !== 'run_out') {
     actualWicket = false; // Nullify non-run-out dismissals on free hit
   }
