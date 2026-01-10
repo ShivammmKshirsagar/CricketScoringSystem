@@ -98,6 +98,50 @@
     border-color: hsl(var(--border) / 0.8);
   }
 
+  /* Section with subtle background */
+  .section-muted {
+    @apply bg-muted/30;
+  }
+
+  /* Status badge styles */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium uppercase tracking-wider;
+  }
+
+  .status-badge-live {
+    @apply bg-primary/15 text-primary border border-primary/30;
+  }
+
+  .status-badge-upcoming {
+    @apply bg-secondary text-muted-foreground border border-border;
+  }
+
+  .status-badge-completed {
+    @apply bg-muted text-muted-foreground border border-border;
+  }
+
+  /* Live pulse indicator */
+  .live-pulse {
+    @apply relative;
+  }
+
+  .live-pulse::before {
+    content: '';
+    @apply absolute w-2 h-2 rounded-full bg-primary;
+    animation: live-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes live-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+  }
+
   .score-display {
     font-family: 'Outfit', sans-serif;
     font-variant-numeric: tabular-nums;

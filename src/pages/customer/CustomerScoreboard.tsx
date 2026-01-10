@@ -6,6 +6,7 @@ import { Scoreboard } from "@/components/Scoreboard";
 import { useLiveScore } from "@/hooks/useLiveScore";
 import { getMatch } from "@/lib/matchStore";
 import { ScorecardTable } from "@/components/ScorecardTable";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function CustomerScoreboard() {
   const { matchId } = useParams();
@@ -52,6 +53,7 @@ export default function CustomerScoreboard() {
   const currentScore = snapshot.currentInnings === 1 ? snapshot.innings1Score : snapshot.innings2Score;
 
   return (
+    <PageTransition>
     <div className="space-y-6">
       <MatchHeader match={match} />
 
@@ -97,5 +99,6 @@ export default function CustomerScoreboard() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

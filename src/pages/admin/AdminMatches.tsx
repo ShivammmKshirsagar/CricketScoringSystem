@@ -9,6 +9,7 @@ import { deleteMatch, upsertMatch, updateMatch } from "@/lib/matchStore";
 import { getLiveScore, clearLiveScore } from "@/lib/liveScoreStore";
 import { Match } from "@/types/match";
 import { toast } from "sonner";
+import { PageTransition } from "@/components/PageTransition";
 
 function formatWhen(d?: Date) {
   if (!d) return "-";
@@ -65,67 +66,76 @@ export default function AdminMatches() {
   };
 
   return (
-    <div className="space-y-6">
+    <PageTransition>
+    <div className="space-y-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-black text-foreground">Admin</h1>
-          <p className="mt-1 text-muted-foreground">Create, schedule, and manage matches.</p>
-          <label className="mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <h1 className="font-display text-2xl font-bold text-foreground">Match Management</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">Create, schedule, and manage matches.</p>
+          <label className="mt-3 inline-flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
             <input
               type="checkbox"
               checked={showArchived}
               onChange={(e) => setShowArchived(e.target.checked)}
+              className="rounded border-border"
             />
-            Show archived
+            Show archived matches
           </label>
         </div>
 
         <Button
           variant="hero"
+          size="sm"
           onClick={() => {
             setEditingMatch(undefined);
             setIsModalOpen(true);
           }}
         >
-          Create Match
+          + New Match
         </Button>
       </div>
 
       {visible.length === 0 ? (
-        <Card variant="default">
-          <p className="text-muted-foreground">No matches yet. Create your first match.</p>
+        <Card variant="default" className="py-10 text-center">
+          <p className="text-sm text-muted-foreground">No matches yet. Create your first match to get started.</p>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {visible.map((m) => {
             const scoringStarted = !!getLiveScore(m.id);
             const canEdit = !scoringStarted;
             const canScore = m.status === "live";
 
+            const statusBadgeClass = 
+              m.status === "live" ? "status-badge-live" : 
+              m.status === "upcoming" ? "status-badge-upcoming" : 
+              "status-badge-completed";
+
             return (
-              <Card key={m.id} variant="default" className="flex flex-col gap-3">
+              <Card key={m.id} variant="default" className="flex flex-col gap-3 py-4">
                 <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="font-display text-xl font-bold text-foreground">
-                      {m.team1.shortName} vs {m.team2.shortName}
+                  <div className="flex items-start gap-3">
+                    <div className={`status-badge ${statusBadgeClass}`}>
+                      {m.status === "live" && <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>}
+                      {m.status}
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      {m.team1.name} vs {m.team2.name}
-                    </div>
-                    <div className="mt-1 text-sm text-muted-foreground">
-                      {m.venue} • {m.overs} overs
-                    </div>
-                    {scoringStarted && (
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        Scoring started (match details locked)
+                    <div>
+                      <div className="font-display text-base font-bold text-foreground">
+                        {m.team1.shortName} vs {m.team2.shortName}
                       </div>
-                    )}
+                      <div className="text-xs text-muted-foreground">
+                        {m.venue} • {m.overs} overs
+                      </div>
+                      {scoringStarted && (
+                        <div className="mt-1 text-xs text-primary/70">
+                          Scoring in progress
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="text-right">
-                    <div className="text-xs uppercase tracking-wider text-muted-foreground">Status</div>
-                    <div className="mt-1 font-semibold text-foreground">{m.status}</div>
-                    <div className="mt-2 text-xs text-muted-foreground">Scheduled: {formatWhen(m.scheduledAt)}</div>
+                  <div className="text-right text-xs text-muted-foreground">
+                    {formatWhen(m.scheduledAt)}
                   </div>
                 </div>
 
@@ -236,5 +246,6 @@ export default function AdminMatches() {
         }}
       />
     </div>
+    </PageTransition>
   );
 }

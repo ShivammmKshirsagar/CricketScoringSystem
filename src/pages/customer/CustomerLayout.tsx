@@ -11,15 +11,16 @@ export default function CustomerLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="sticky top-0 z-40 border-b border-border bg-background">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-5">
               <Logo size="sm" />
-              <nav className="hidden md:flex items-center gap-2">
+              <div className="h-5 w-px bg-border hidden md:block"></div>
+              <nav className="hidden md:flex items-center gap-1">
                 <NavLink
                   to="/"
-                  className="px-3 py-2 rounded-lg text-sm text-muted-foreground"
+                  className="px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
                   activeClassName="bg-secondary text-foreground"
                 >
                   Matches
@@ -27,23 +28,25 @@ export default function CustomerLayout() {
               </nav>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {/* Show admin info if logged in as admin */}
               {isAuthenticated && user?.role === "admin" ? (
                 <>
-                  <span className="hidden sm:inline text-sm text-muted-foreground">
-                    Admin: {user.username}
+                  <span className="hidden sm:inline text-xs text-muted-foreground">
+                    {user.username}
                   </span>
                   <Button
                     variant="outline"
                     size="sm"
+                    className="text-xs h-7"
                     onClick={() => navigate("/admin")}
                   >
-                    Admin Panel
+                    Admin
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
+                    className="text-xs h-7"
                     onClick={() => {
                       logout();
                       navigate("/", { replace: true });
@@ -57,10 +60,11 @@ export default function CustomerLayout() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="text-xs h-7"
                   onClick={() => navigate("/login")}
                 >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Admin Login
+                  <Shield className="h-3.5 w-3.5 mr-1.5" />
+                  Admin
                 </Button>
               )}
             </div>
@@ -68,7 +72,7 @@ export default function CustomerLayout() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6">
         <Outlet />
       </main>
     </div>

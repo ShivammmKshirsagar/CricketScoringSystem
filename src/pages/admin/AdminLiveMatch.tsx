@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Card } from "@/components/Card";
 import { LiveMatch } from "@/pages/LiveMatch";
 import { getMatch, updateMatch } from "@/lib/matchStore";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function AdminLiveMatch() {
   const navigate = useNavigate();
@@ -30,14 +31,16 @@ export default function AdminLiveMatch() {
   }
 
   return (
-    <LiveMatch
-      match={match}
-      persist
-      backTo="/admin/matches"
-      onEndMatch={() => {
-        updateMatch(match.id, { status: "completed" });
-        navigate("/admin/matches", { replace: true });
-      }}
-    />
+    <PageTransition>
+      <LiveMatch
+        match={match}
+        persist
+        backTo="/admin/matches"
+        onEndMatch={() => {
+          updateMatch(match.id, { status: "completed" });
+          navigate("/admin/matches", { replace: true });
+        }}
+      />
+    </PageTransition>
   );
 }

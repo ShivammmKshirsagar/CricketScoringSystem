@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/ui/button";
 import { useMatches } from "@/hooks/useMatches";
+import { PageTransition } from "@/components/PageTransition";
 
 function formatWhen(d?: Date) {
   if (!d) return "-";
@@ -29,32 +30,43 @@ export default function CustomerMatches() {
   }, [matches]);
 
   return (
-    <div className="space-y-8">
+    <PageTransition>
+    <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-black text-foreground">Matches</h1>
-        <p className="mt-1 text-muted-foreground">View live scores and upcoming fixtures.</p>
+        <h1 className="font-display text-2xl font-bold text-foreground">Matches</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">View live scores and upcoming fixtures.</p>
       </div>
 
-      <div className="space-y-4">
-        <h2 className="font-display text-xl font-bold text-foreground">Live</h2>
+      {/* Live Matches Section */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+          <h2 className="font-display text-sm font-semibold text-foreground uppercase tracking-wide">Live Now</h2>
+        </div>
 
         {live.length === 0 ? (
-          <Card variant="default">
-            <p className="text-muted-foreground">No live matches right now.</p>
+          <Card variant="default" className="py-8 text-center">
+            <p className="text-sm text-muted-foreground">No live matches right now</p>
           </Card>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {live.map((m) => (
-              <Card key={m.id} variant="flat" className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="font-display text-xl font-bold text-foreground">
-                    {m.team1.shortName} vs {m.team2.shortName}
+              <Card key={m.id} variant="flat" className="flex items-center justify-between gap-4 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="status-badge status-badge-live">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                    Live
                   </div>
-                  <div className="text-sm text-muted-foreground">{m.venue}</div>
+                  <div>
+                    <div className="font-display text-base font-bold text-foreground">
+                      {m.team1.shortName} vs {m.team2.shortName}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{m.venue}</div>
+                  </div>
                 </div>
 
                 <Button variant="hero" size="sm" onClick={() => navigate(`/match/${m.id}`)}>
-                  View Live
+                  Watch
                 </Button>
               </Card>
             ))}
@@ -62,24 +74,27 @@ export default function CustomerMatches() {
         )}
       </div>
 
-      <div className="space-y-4">
-        <h2 className="font-display text-xl font-bold text-foreground">Upcoming</h2>
+      {/* Upcoming Matches Section */}
+      <div className="space-y-3">
+        <h2 className="font-display text-sm font-semibold text-foreground uppercase tracking-wide">Upcoming</h2>
 
         {upcoming.length === 0 ? (
-          <Card variant="default">
-            <p className="text-muted-foreground">No upcoming matches scheduled.</p>
+          <Card variant="default" className="py-8 text-center">
+            <p className="text-sm text-muted-foreground">No upcoming matches scheduled</p>
           </Card>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {upcoming.map((m) => (
-              <Card key={m.id} variant="default" className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="font-display text-xl font-bold text-foreground">
-                    {m.team1.shortName} vs {m.team2.shortName}
+              <Card key={m.id} variant="default" className="flex items-center justify-between gap-4 py-4">
+                <div className="flex items-start gap-3">
+                  <div className="status-badge status-badge-upcoming">Upcoming</div>
+                  <div>
+                    <div className="font-display text-base font-bold text-foreground">
+                      {m.team1.shortName} vs {m.team2.shortName}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{m.venue}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{formatWhen(m.scheduledAt)}</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">{m.team1.name} vs {m.team2.name}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{m.venue}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">Scheduled: {formatWhen(m.scheduledAt)}</div>
                 </div>
 
                 <Button variant="outline" size="sm" onClick={() => navigate(`/match/${m.id}`)}>
@@ -91,5 +106,6 @@ export default function CustomerMatches() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }

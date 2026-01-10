@@ -7,6 +7,7 @@ import { CreateMatchModal } from "@/components/CreateMatchModal";
 import { LiveMatch } from "@/pages/LiveMatch";
 import { Match } from "@/types/match";
 import { useAuth } from "@/auth/AuthContext";
+import { PageTransition } from "@/components/PageTransition";
 import { 
   Play, 
   Zap, 
@@ -37,6 +38,7 @@ const Index = () => {
   }
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
@@ -69,118 +71,122 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 lg:py-28">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8">
-            <Zap className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Real-time Cricket Scoring</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/25 mb-6">
+            <Zap className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-semibold text-primary uppercase tracking-wide">Real-time Scoring</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6 tracking-tight">
+          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4 tracking-tight leading-tight">
             Score Cricket Matches
             <br />
             <span className="text-primary">Like Never Before</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
+          <p className="text-base text-muted-foreground max-w-xl mx-auto mb-8">
             A premium, real-time cricket scoring application. Track every ball, every run, 
             every wicket with precision and style.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="hero" size="xl" onClick={() => setIsModalOpen(true)}>
-              <Play className="h-5 w-5 mr-2" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button variant="hero" size="lg" onClick={() => setIsModalOpen(true)}>
+              <Play className="h-4 w-4 mr-2" />
               Start New Match
             </Button>
-            <Button variant="outline" size="xl">
-              <Trophy className="h-5 w-5 mr-2" />
+            <Button variant="outline" size="lg">
+              <Trophy className="h-4 w-4 mr-2" />
               View Demo
             </Button>
           </div>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-8 md:gap-16 mt-16 pt-16 border-t border-border">
+      {/* Stats Section */}
+      <section className="py-10 section-muted border-y border-border">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center gap-8 md:gap-16">
             <div className="text-center">
-              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">1000+</div>
-              <div className="text-sm text-muted-foreground mt-1">Balls Scored</div>
+              <div className="score-display text-2xl md:text-3xl font-display font-black text-foreground">1000+</div>
+              <div className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wide">Balls Scored</div>
             </div>
-            <div className="h-10 w-px bg-border"></div>
+            <div className="h-8 w-px bg-border"></div>
             <div className="text-center">
-              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">50+</div>
-              <div className="text-sm text-muted-foreground mt-1">Matches</div>
+              <div className="score-display text-2xl md:text-3xl font-display font-black text-foreground">50+</div>
+              <div className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wide">Matches</div>
             </div>
-            <div className="h-10 w-px bg-border"></div>
+            <div className="h-8 w-px bg-border"></div>
             <div className="text-center">
-              <div className="score-display text-3xl md:text-4xl font-display font-black text-foreground">100%</div>
-              <div className="text-sm text-muted-foreground mt-1">Uptime</div>
+              <div className="score-display text-2xl md:text-3xl font-display font-black text-foreground">100%</div>
+              <div className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wide">Uptime</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 border-t border-border">
+      <section className="py-14">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
+          <div className="text-center mb-10">
+            <h2 className="font-display text-xl md:text-2xl font-bold text-foreground mb-2">
               Everything You Need
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
               Professional-grade features designed for serious cricket scoring
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             <FeatureCard
               icon={Zap}
               title="Real-time Updates"
-              description="Instant ball-by-ball updates with live score calculations and run rate tracking."
+              description="Instant ball-by-ball updates with live score calculations."
             />
             <FeatureCard
               icon={BarChart3}
               title="Detailed Statistics"
-              description="Comprehensive stats including run rates, partnerships, and over-by-over breakdowns."
+              description="Comprehensive stats including run rates and partnerships."
             />
             <FeatureCard
               icon={Users}
               title="Multi-player Support"
-              description="Track individual player performances, batting and bowling figures."
+              description="Track individual player batting and bowling figures."
             />
             <FeatureCard
               icon={Globe}
               title="Any Format"
-              description="Support for T20, ODI, Test matches, and custom overs formats."
+              description="Support for T20, ODI, Test, and custom formats."
             />
             <FeatureCard
               icon={Trophy}
               title="Match History"
-              description="Access past matches, review scorecards, and analyze performance trends."
+              description="Access past matches and analyze performance trends."
             />
             <FeatureCard
               icon={Play}
               title="Intuitive Controls"
-              description="Easy-to-use scoring interface with one-tap recording for all ball outcomes."
+              description="One-tap scoring interface for all ball outcomes."
             />
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 border-t border-border">
+      <section className="py-14 section-muted border-y border-border">
         <div className="container mx-auto px-4">
-          <div className="flat-card max-w-4xl mx-auto p-10 text-center">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="font-display text-xl md:text-2xl font-bold text-foreground mb-3">
               Ready to Score?
             </h2>
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+            <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
               Start scoring your cricket matches with precision. It's free, fast, and beautiful.
             </p>
-            <Button variant="hero" size="lg" onClick={() => setIsModalOpen(true)}>
-              <Play className="h-5 w-5 mr-2" />
+            <Button variant="hero" size="default" onClick={() => setIsModalOpen(true)}>
+              <Play className="h-4 w-4 mr-2" />
               Create Your First Match
             </Button>
           </div>
@@ -188,12 +194,12 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8">
+      <footer className="py-6">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <Logo size="sm" />
-            <p className="text-sm text-muted-foreground">
-              © 2026 CricMitra. Built with passion for cricket and technology.
+            <p className="text-xs text-muted-foreground">
+              © 2026 CricMitra. Built with passion for cricket.
             </p>
           </div>
         </div>
@@ -206,6 +212,7 @@ const Index = () => {
         onCreateMatch={handleCreateMatch}
       />
     </div>
+    </PageTransition>
   );
 };
 

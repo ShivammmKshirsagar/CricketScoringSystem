@@ -11,14 +11,14 @@ interface FeatureCardProps {
 
 export function FeatureCard({ icon: Icon, title, description, className }: FeatureCardProps) {
   return (
-    <Card variant="flat" className={cn("group hover:border-primary/40 p-5", className)}>
-      <div className="mb-3 inline-flex p-2.5 rounded-lg bg-primary/10 text-primary">
-        <Icon className="h-5 w-5" />
+    <Card variant="flat" className={cn("group hover:border-primary/30 p-4 transition-colors", className)}>
+      <div className="mb-2.5 inline-flex p-2 rounded-md bg-primary/10 text-primary">
+        <Icon className="h-4 w-4" />
       </div>
-      <h3 className="font-display text-base font-semibold text-foreground mb-1.5">
+      <h3 className="font-display text-sm font-semibold text-foreground mb-1">
         {title}
       </h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">
+      <p className="text-xs text-muted-foreground leading-relaxed">
         {description}
       </p>
     </Card>

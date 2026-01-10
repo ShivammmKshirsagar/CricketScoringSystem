@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/auth/AuthContext";
+import { PageTransition } from "@/components/PageTransition";
 
 type LocationState = {
   from?: { pathname?: string };
@@ -58,6 +59,7 @@ export default function Login() {
   };
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-10">
         <div className="mx-auto max-w-md">
@@ -120,5 +122,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

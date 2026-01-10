@@ -10,16 +10,17 @@ export default function AdminHome() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="sticky top-0 z-40 border-b border-border bg-background">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Logo size="sm" />
 
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Signed in as {user?.username}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">{user?.username}</span>
               <Button
                 variant="outline"
                 size="sm"
+                className="text-xs h-7"
                 onClick={() => {
                   logout();
                   navigate("/login", { replace: true });
@@ -32,11 +33,11 @@ export default function AdminHome() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10">
+      <main className="container mx-auto px-4 py-6">
         <Card variant="flat" className="max-w-2xl">
-          <h1 className="font-display text-3xl font-black text-foreground">Admin View</h1>
-          <p className="mt-2 text-muted-foreground">
-            This is the admin area. Put admin-only features here (manage users, matches, settings, etc.).
+          <h1 className="font-display text-2xl font-bold text-foreground">Admin Dashboard</h1>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Manage users, matches, and application settings.
           </p>
         </Card>
       </main>

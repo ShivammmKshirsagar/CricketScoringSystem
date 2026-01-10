@@ -10,15 +10,16 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="sticky top-0 z-40 border-b border-border bg-background">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-5">
               <Logo size="sm" />
-              <nav className="hidden md:flex items-center gap-2">
+              <div className="h-5 w-px bg-border hidden md:block"></div>
+              <nav className="hidden md:flex items-center gap-1">
                 <NavLink
                   to="/admin/matches"
-                  className="px-3 py-2 rounded-lg text-sm text-muted-foreground"
+                  className="px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
                   activeClassName="bg-secondary text-foreground"
                 >
                   Matches
@@ -26,11 +27,12 @@ export default function AdminLayout() {
               </nav>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="hidden sm:inline text-sm text-muted-foreground">Signed in as {user?.username}</span>
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline text-xs text-muted-foreground">{user?.username}</span>
               <Button
                 variant="outline"
                 size="sm"
+                className="text-xs h-7"
                 onClick={() => {
                   logout();
                   navigate("/login", { replace: true });
@@ -43,7 +45,7 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-6">
         <Outlet />
       </main>
     </div>
