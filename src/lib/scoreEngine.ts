@@ -95,6 +95,7 @@ export function createInitialScoreState(): ScoreState {
  * - No-balls automatically add +1 run as extra
  * - No-balls trigger free hit for next legal delivery
  * - Wickets cannot fall on free hit (except run-out)
+ * - Runs do NOT count on normal wickets (except run-out)
  * - Free hit continues through illegal deliveries
  */
 export function applyBall(
@@ -104,27 +105,31 @@ export function applyBall(
   // CRICKET RULE: No-ball always adds +1 run automatically
   let extraRuns = ball.extraRuns;
   if (ball.ballType === 'no_ball') {
-    // If extra runs not specified, default to 1
-    // If specified, ensure minimum of 1
     extraRuns = Math.max(1, ball.extraRuns);
   }
 
-  // Calculate total runs from this ball
-  const runsFromBall = ball.runsOffBat + extraRuns;
-  const isLegal = isLegalDelivery(ball);
-
-  // CRICKET RULE: Wicket cannot fall on free hit (except run-out)
+  // Initialize actual values (will be modified based on cricket rules)
   let actualWicket = ball.isWicket;
+  let actualRunsOffBat = ball.runsOffBat;
 
   // Special Rule: On No-Ball, only run-out is valid
   if (ball.ballType === 'no_ball' && ball.isWicket && ball.wicketType !== 'run_out') {
-    actualWicket = false; // Nullify non-run-out dismissals on no-ball
+    actualWicket = false;
   }
 
-  // Free Hit Rule: Verify same logic (redundant but safe to keep explicit)
+  // Free Hit Rule: Only run-out is valid
   if (prevState.isFreeHit && ball.isWicket && ball.wicketType !== 'run_out') {
-    actualWicket = false; // Nullify non-run-out dismissals on free hit
+    actualWicket = false;
   }
+
+  // CRICKET RULE: Runs do NOT count on wickets (except run-out)
+  if (actualWicket && ball.wicketType !== 'run_out') {
+    actualRunsOffBat = 0;
+  }
+
+  // Calculate total runs from this ball
+  const runsFromBall = actualRunsOffBat + extraRuns;
+  const isLegal = isLegalDelivery(ball);
 
   // Update balls / overs (only for legal deliveries)
   let overs = prevState.overs;
@@ -139,28 +144,23 @@ export function applyBall(
   }
 
   // CRICKET RULE: Free hit logic
-  // - Set free hit after no-ball
-  // - Consume free hit after legal delivery
-  // - Free hit persists through illegal deliveries (wide, no-ball)
   let nextFreeHit = false;
-
+  
   if (ball.ballType === 'no_ball') {
-    // No-ball triggers free hit for next legal delivery
     nextFreeHit = true;
   } else if (isLegal) {
-    // Legal delivery consumes free hit
     nextFreeHit = false;
   } else {
-    // Illegal deliveries (wide) preserve free hit state
     nextFreeHit = prevState.isFreeHit;
   }
 
   const newRuns = prevState.runs + runsFromBall;
   const newWickets = prevState.wickets + (actualWicket ? 1 : 0);
 
-  // Create the ball event with free hit flag
+  // Create the ball event with corrected values
   const recordedBall: BallEvent = {
     ...ball,
+    runsOffBat: actualRunsOffBat,
     extraRuns,
     isWicket: actualWicket,
     wasFreeHit: prevState.isFreeHit,
@@ -172,12 +172,12 @@ export function applyBall(
   let currentStrikerId = prevState.currentStrikerId;
   let currentNonStrikerId = prevState.currentNonStrikerId;
 
-  // 1. Rotate if odd runs scored by bat (and legal)
-  if (ball.runsOffBat % 2 !== 0) {
+  // Rotate if odd runs scored by bat
+  if (actualRunsOffBat % 2 !== 0) {
     [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
   }
 
-  // 2. Rotate at end of over (if legal ball ended over)
+  // Rotate at end of over
   if (isLegal && balls === 0 && overs > prevState.overs) {
     [currentStrikerId, currentNonStrikerId] = [currentNonStrikerId, currentStrikerId];
   }

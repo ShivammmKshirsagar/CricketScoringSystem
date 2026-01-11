@@ -75,11 +75,12 @@ export function BallInputPanel({
         extraRuns = 0; // Engine enforces minimum +1
         isLegal = false;
       } else if (extraType === 'wide') {
-        // WIDE LOGIC:
-        // - No runs off bat
-        // - extraRuns = selected runs or default 1
+        // WIDE LOGIC (FIXED):
+        // - No runs off bat (wide doesn't touch bat)
+        // - extraRuns = 1 (wide penalty) + any additional runs
+        // - Total: 1 (wide) + additional runs taken
         runsOffBat = 0;
-        extraRuns = selectedRuns ?? 1;
+        extraRuns = 1 + (selectedRuns ?? 0); // Wide penalty + runs
         isLegal = false;
       } else if (extraType === 'bye' || extraType === 'leg_bye') {
         // BYE/LEG-BYE LOGIC:
@@ -120,7 +121,7 @@ export function BallInputPanel({
   const hasSelection = selectedRuns !== null || isWicket || extraType;
 
   return (
-    <Card variant="flat" className={cn("", className)}>
+    <Card variant="default" className={cn("", className)}>
       {/* Free Hit Indicator */}
       {isFreeHit && (
         <div className="mb-6 p-4 rounded-xl bg-accent/20 border-2 border-accent animate-pulse">

@@ -17,7 +17,31 @@ export function getCurrentRunRate(state: ScoreState): number {
 }
 
 export function getLastSixBalls(state: ScoreState): BallEvent[] {
-  return state.ballEvents.filter(b => b.isLegal).slice(-6);
+  // FIXED: Return last 6 legal deliveries PLUS any illegals in current over
+  // This ensures wides/no-balls appear in the over display
+  
+  const allBalls = state.ballEvents;
+  if (allBalls.length === 0) return [];
+  
+  // Find balls in the current over (since last complete over)
+  const currentOverBalls: BallEvent[] = [];
+  let legalCount = 0;
+  
+  // Work backwards from the last ball
+  for (let i = allBalls.length - 1; i >= 0; i--) {
+    const ball = allBalls[i];
+    currentOverBalls.unshift(ball); // Add to start
+    
+    if (ball.isLegal) {
+      legalCount++;
+      if (legalCount === 6) {
+        // We've collected a complete over, stop here
+        break;
+      }
+    }
+  }
+  
+  return currentOverBalls;
 }
 
 /* ---------- Over summary ---------- */
