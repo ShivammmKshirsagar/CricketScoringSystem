@@ -48,14 +48,17 @@ export function calculateRequiredRunRate(
 }
 
 // Calculate extras from events
+// FIXED: Properly count extras for wides and no-balls
 export function calculateExtras(events: BallEvent[]): Extras {
   return events.reduce(
     (extras, event) => {
       switch (event.ballType) {
         case 'wide':
+          // Wide: all runs are extras (1 for wide + any additional runs taken)
           extras.wides += event.extraRuns;
           break;
         case 'no_ball':
+          // No-ball: extraRuns is the penalty (minimum 1), runs off bat don't count as extras
           extras.noBalls += event.extraRuns;
           break;
         case 'bye':

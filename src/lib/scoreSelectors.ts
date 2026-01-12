@@ -16,32 +16,45 @@ export function getCurrentRunRate(state: ScoreState): number {
   return Number((state.runs / (balls / 6)).toFixed(2));
 }
 
-export function getLastSixBalls(state: ScoreState): BallEvent[] {
-  // FIXED: Return last 6 legal deliveries PLUS any illegals in current over
-  // This ensures wides/no-balls appear in the over display
+export function getCurrentOverBalls(state: ScoreState): BallEvent[] {
+  // Returns ONLY the balls in the current incomplete over
+  // Resets when a new over starts (after 6 legal deliveries)
   
   const allBalls = state.ballEvents;
   if (allBalls.length === 0) return [];
   
-  // Find balls in the current over (since last complete over)
+  // Find where the current over started
   const currentOverBalls: BallEvent[] = [];
   let legalCount = 0;
   
-  // Work backwards from the last ball
+  // Work backwards to find balls in current incomplete over
   for (let i = allBalls.length - 1; i >= 0; i--) {
     const ball = allBalls[i];
-    currentOverBalls.unshift(ball); // Add to start
     
     if (ball.isLegal) {
       legalCount++;
-      if (legalCount === 6) {
-        // We've collected a complete over, stop here
-        break;
-      }
     }
+    
+    // If we've passed into the previous over, stop
+    if (legalCount > state.balls && state.balls > 0) {
+      break;
+    }
+    
+    // If current over is complete (balls === 0 means over just completed)
+    // Only include balls until we hit 6 legal ones
+    if (state.balls === 0 && legalCount > 0) {
+      break;
+    }
+    
+    currentOverBalls.unshift(ball);
   }
   
   return currentOverBalls;
+}
+
+// Legacy function for backward compatibility (deprecated)
+export function getLastSixBalls(state: ScoreState): BallEvent[] {
+  return getCurrentOverBalls(state);
 }
 
 /* ---------- Over summary ---------- */
@@ -95,11 +108,19 @@ export function getOverSummaries(state: ScoreState): OverSummary[] {
 export function getBallDisplayText(ball: BallEvent): string {
   if (ball.isWicket) return "W";
 
+  // Calculate total runs from this ball
+  const totalRuns = ball.runsOffBat + ball.extraRuns;
+
   switch (ball.ballType) {
     case "wide":
-      return `${ball.extraRuns}Wd`;
+      // Wide: show total (e.g., "1Wd" for normal wide, "5Wd" for wide + 4 runs)
+      return `${totalRuns}Wd`;
     case "no_ball":
-      return `${ball.extraRuns}Nb`;
+      // No-ball: show runs off bat + extra (e.g., "Nb+6" for six off no-ball)
+      if (ball.runsOffBat > 0) {
+        return `${ball.runsOffBat}+Nb`;
+      }
+      return `${totalRuns}Nb`;
     case "bye":
       return `${ball.extraRuns}B`;
     case "leg_bye":
