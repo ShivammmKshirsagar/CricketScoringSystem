@@ -53,6 +53,24 @@ export interface OverSummary {
   balls: BallEvent[];
 }
 
+// Wagon Wheel shot region type
+export type ShotRegion =
+  | 'cover'
+  | 'mid-off'
+  | 'mid-on'
+  | 'midwicket'
+  | 'square-leg'
+  | 'fine-leg'
+  | 'third-man'
+  | 'point'
+  | 'straight';
+
+// Wagon Wheel metadata (optional, analytics only)
+export interface WagonWheelData {
+  region: ShotRegion;
+  angle?: number; // 0-360 degrees for precise visualization
+}
+
 // One single definition of Ball
 export interface BallEvent {
   runsOffBat: number;
@@ -61,10 +79,12 @@ export interface BallEvent {
   isLegal: boolean;
   isWicket: boolean;
   wicketType?: WicketType;
-  // New fields for detailed tracking (Optional for backward compatibility)
+  // Player tracking (Optional for backward compatibility)
   batterId?: string;
   bowlerId?: string;
   wasFreeHit: boolean; // Was this delivery a free hit
+  // Wagon Wheel analytics (OPTIONAL - purely for visualization)
+  wagonWheel?: WagonWheelData;
 }
 
 export type WicketType =
@@ -92,4 +112,13 @@ export interface PlayerStats {
   balls: number;
   fours: number;
   sixes: number;
+}
+
+// Wagon Wheel shot for visualization
+export interface WagonWheelShot {
+  runs: number;
+  region: ShotRegion;
+  angle: number;
+  batterId?: string;
+  batterName?: string;
 }

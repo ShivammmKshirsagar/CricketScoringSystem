@@ -10,7 +10,8 @@ import { MatchScoreHeader } from "@/components/match/MatchScoreHeader";
 import { LiveTab } from "@/components/match/LiveTab";
 import { OversTab } from "@/components/match/OversTab";
 import { InfoTab } from "@/components/match/InfoTab";
-import { Activity, Table, ListOrdered, Info } from "lucide-react";
+import { WagonWheelChart } from "@/components/WagonWheelChart";
+import { Activity, Table, ListOrdered, Info, Target } from "lucide-react";
 
 export default function CustomerScoreboard() {
   const { matchId } = useParams();
@@ -93,7 +94,7 @@ export default function CustomerScoreboard() {
 
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-4 bg-secondary/50 p-1 h-auto">
+          <TabsList className="w-full grid grid-cols-5 bg-secondary/50 p-1 h-auto">
             <TabsTrigger 
               value="live" 
               className="flex items-center justify-center gap-1 sm:gap-1.5 text-xs py-2 data-[state=active]:bg-background"
@@ -114,6 +115,13 @@ export default function CustomerScoreboard() {
             >
               <ListOrdered className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Overs</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="wagon-wheel" 
+              className="flex items-center justify-center gap-1 sm:gap-1.5 text-xs py-2 data-[state=active]:bg-background"
+            >
+              <Target className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Wagon</span>
             </TabsTrigger>
             <TabsTrigger 
               value="info" 
@@ -179,6 +187,30 @@ export default function CustomerScoreboard() {
                     {match.tossDecision === "bat" ? match.team1.name : match.team2.name} - 1st Innings
                   </div>
                   <OversTab score={snapshot.innings1Score} />
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Wagon Wheel Tab - NEW */}
+          <TabsContent value="wagon-wheel" className="mt-3 sm:mt-4">
+            <div className="space-y-4 sm:space-y-6">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 sm:mb-3">
+                  {battingTeam.name} - Wagon Wheel
+                </div>
+                <WagonWheelChart 
+                  score={currentScore}
+                  selectedBatterId={currentScore.currentStrikerId}
+                />
+              </div>
+
+              {snapshot.currentInnings === 2 && snapshot.innings1Score.ballEvents.length > 0 && (
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 sm:mb-3">
+                    {match.tossDecision === "bat" ? match.team1.name : match.team2.name} - 1st Innings
+                  </div>
+                  <WagonWheelChart score={snapshot.innings1Score} />
                 </div>
               )}
             </div>

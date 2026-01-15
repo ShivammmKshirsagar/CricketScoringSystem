@@ -289,3 +289,52 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
 
   return Object.values(stats);
 }
+
+/* ---------- Wagon Wheel Analytics ---------- */
+
+/**
+ * Get wagon wheel shots for visualization
+ * PURE ANALYTICS - does not affect scoring
+ */
+export function getWagonWheelShots(
+  state: ScoreState,
+  allPlayers: any[] = [],
+  batterId?: string
+): import("@/types/score").WagonWheelShot[] {
+  const shots = state.ballEvents
+    .filter(ball => {
+      // Only include balls with wagon wheel data
+      if (!ball.wagonWheel) return false;
+      // Only scoring shots (runs off bat)
+      if (ball.runsOffBat === 0) return false;
+      // Filter by batter if specified
+      if (batterId && ball.batterId !== batterId) return false;
+      return true;
+    })
+    .map(ball => {
+      const player = ball.batterId ? allPlayers.find(p => p.id === ball.batterId) : null;
+      
+      // Convert region to angle for visualization
+      const regionAngles: Record<string, number> = {
+        'straight': 0,
+        'mid-off': 30,
+        'cover': 60,
+        'point': 90,
+        'third-man': 120,
+        'fine-leg': 150,
+        'square-leg': 180,
+        'midwicket': 210,
+        'mid-on': 330,
+      };
+      
+      return {
+        runs: ball.runsOffBat,
+        region: ball.wagonWheel!.region,
+        angle: ball.wagonWheel!.angle ?? regionAngles[ball.wagonWheel!.region] ?? 0,
+        batterId: ball.batterId,
+        batterName: player?.name,
+      };
+    });
+  
+  return shots;
+}

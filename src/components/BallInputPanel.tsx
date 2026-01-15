@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./Card";
-import { BallEvent, WicketType, BallType } from "@/types/score";
+import { BallEvent, WicketType, BallType, ShotRegion } from "@/types/score";
 import { cn } from "@/lib/utils";
 import { X, RotateCcw, Check, Zap } from "lucide-react";
+import { WagonWheelInput } from "./WagonWheelInput";
 
 interface BallInputPanelProps {
   onBallRecorded: (event: BallEvent) => void;
@@ -26,15 +27,20 @@ export function BallInputPanel({
   const [extraType, setExtraType] = useState<ExtraType>(null);
   const [isWicket, setIsWicket] = useState(false);
   const [wicketType, setWicketType] = useState<WicketType | null>(null);
+  const [wagonWheelRegion, setWagonWheelRegion] = useState<ShotRegion | null>(null);
 
   const handleRunSelect = (runs: number) => {
     if (disabled) return;
     setSelectedRuns(runs);
+    // Reset wagon wheel when runs change
+    setWagonWheelRegion(null);
   };
 
   const handleExtraToggle = (type: ExtraType) => {
     if (disabled) return;
     setExtraType(extraType === type ? null : type);
+    // Reset wagon wheel when extra type changes
+    setWagonWheelRegion(null);
   };
 
   const handleWicketToggle = () => {
@@ -53,6 +59,8 @@ export function BallInputPanel({
         setWicketType(null);
       }
     }
+    // Reset wagon wheel when wicket changes
+    setWagonWheelRegion(null);
   };
 
   const handleConfirm = () => {
@@ -67,26 +75,14 @@ export function BallInputPanel({
       ballType = extraType;
       
       if (extraType === 'no_ball') {
-        // NO-BALL LOGIC:
-        // - runsOffBat = runs scored by bat (e.g., 2)
-        // - extraRuns = 0 (engine will add mandatory +1)
-        // - Total will be: runsOffBat + 1 (auto by engine)
         runsOffBat = selectedRuns ?? 0;
-        extraRuns = 0; // Engine enforces minimum +1
+        extraRuns = 0;
         isLegal = false;
       } else if (extraType === 'wide') {
-        // WIDE LOGIC (FIXED):
-        // - No runs off bat (wide doesn't touch bat)
-        // - extraRuns = 1 (wide penalty) + any additional runs
-        // - Total: 1 (wide) + additional runs taken
         runsOffBat = 0;
-        extraRuns = 1 + (selectedRuns ?? 0); // Wide penalty + runs
+        extraRuns = 1 + (selectedRuns ?? 0);
         isLegal = false;
       } else if (extraType === 'bye' || extraType === 'leg_bye') {
-        // BYE/LEG-BYE LOGIC:
-        // - No runs off bat (ball didn't touch bat)
-        // - extraRuns = selected runs
-        // - Legal delivery
         runsOffBat = 0;
         extraRuns = selectedRuns ?? 0;
         isLegal = true;
@@ -101,6 +97,10 @@ export function BallInputPanel({
       isWicket,
       wicketType: isWicket ? wicketType ?? undefined : undefined,
       wasFreeHit: isFreeHit,
+      // Add wagon wheel data ONLY if it's a scoring shot (runs off bat)
+      wagonWheel: wagonWheelRegion && runsOffBat > 0 && !isWicket && !extraType
+        ? { region: wagonWheelRegion }
+        : undefined,
     };
 
     onBallRecorded(ball);
@@ -112,6 +112,7 @@ export function BallInputPanel({
     setExtraType(null);
     setIsWicket(false);
     setWicketType(null);
+    setWagonWheelRegion(null);
   };
 
   const wicketTypes: WicketType[] = [
@@ -119,6 +120,13 @@ export function BallInputPanel({
   ];
 
   const hasSelection = selectedRuns !== null || isWicket || extraType;
+  
+  // Show wagon wheel input ONLY for scoring shots (runs 1-6, no extras, no wickets)
+  const showWagonWheel = 
+    selectedRuns !== null && 
+    selectedRuns > 0 && 
+    !extraType && 
+    !isWicket;
 
   return (
     <Card variant="default" className={cn("", className)}>
@@ -161,6 +169,15 @@ export function BallInputPanel({
           ))}
         </div>
       </div>
+
+      {/* Wagon Wheel Input - ONLY for scoring shots */}
+      {showWagonWheel && (
+        <WagonWheelInput
+          selectedRegion={wagonWheelRegion}
+          onSelect={setWagonWheelRegion}
+          onSkip={() => setWagonWheelRegion(null)}
+        />
+      )}
 
       {/* Extras */}
       <div className="mb-6">
@@ -269,6 +286,7 @@ export function BallInputPanel({
               {extraType && ` + ${extraType.replace('_', ' ')}`}
               {extraType === 'no_ball' && ' (+1 auto)'}
               {isWicket && ` + Wicket${wicketType ? ` (${wicketType})` : ''}`}
+              {wagonWheelRegion && ` (${wagonWheelRegion})`}
             </span>
           </div>
         </div>

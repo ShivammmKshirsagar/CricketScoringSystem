@@ -5,7 +5,7 @@ import { Card } from "./Card";
 import {
   getBallDisplayText,
   getCurrentRunRate,
-  getCurrentOverBalls,
+  getLastSixBalls,
   getRequiredRunRate
 } from "@/lib/scoreSelectors"
 
@@ -90,40 +90,40 @@ export function Scoreboard({
       {/* This over */}
       <div className="pt-4 border-t border-border/50">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-muted-foreground">
-            Over {score.overs + 1} {score.balls > 0 ? `(${score.balls}/6)` : ''}
-          </span>
+          <span className="text-sm font-medium text-muted-foreground">This Over</span>
           <span className="text-sm text-muted-foreground">
-            {getCurrentOverBalls(score).reduce(
+            {getLastSixBalls(score).reduce(
               (sum, b) => sum + b.runsOffBat + b.extraRuns,
               0
             )
             } runs
           </span>
         </div>
-        <div className="flex gap-1.5 flex-wrap">
-          {getCurrentOverBalls(score).map((ball, index) => (
-            <div
-              key={index}
-              className={cn(
-                "min-w-[2.25rem] h-10 px-1.5 rounded-lg flex items-center justify-center font-display font-bold text-sm transition-all",
-                ball.isWicket
-                  ? "bg-destructive/20 text-destructive border border-destructive/30"
-                  : ball.runsOffBat === 6
-                    ? "bg-accent/20 text-accent border border-accent/30"
-                    : ball.runsOffBat === 4
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : ball.ballType === "wide" || ball.ballType === "no_ball"
-                        ? "bg-info/20 text-info border border-info/30"
-                        : "bg-secondary text-foreground"
-              )}
-            >
-              {getBallDisplayText(ball)}
-            </div>
-          ))}
-          {getCurrentOverBalls(score).length === 0 && (
-            <span className="text-muted-foreground text-sm">New over starting...</span>
-          )}
+        <div className="flex gap-2">
+          {Array.from({ length: 6 }).map((_, index) => {
+            const ball = getLastSixBalls(score)[index];
+            return (
+              <div
+                key={index}
+                className={cn(
+                  "flex-1 h-10 rounded-lg flex items-center justify-center font-display font-bold text-sm transition-all",
+                  ball ? (
+                    ball.isWicket
+                      ? "bg-destructive/20 text-destructive border border-destructive/30"
+                      : ball.runsOffBat === 6
+                        ? "bg-accent/20 text-accent border border-accent/30"
+                        : ball.runsOffBat === 4
+                          ? "bg-primary/20 text-primary border border-primary/30"
+                          : ball.ballType === "wide" || ball.ballType === "no_ball"
+                            ? "bg-info/20 text-info border border-info/30"
+                            : "bg-secondary text-foreground"
+                  ) : "bg-secondary/50 text-muted-foreground border border-border/30"
+                )}
+              >
+                {ball ? getBallDisplayText(ball) : '•'}
+              </div>
+            );
+          })}
         </div>
       </div>
 
