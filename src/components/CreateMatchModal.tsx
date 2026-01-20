@@ -54,13 +54,13 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      
       <div 
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
         onClick={onClose}
       />
       
-      {/* Modal */}
+      
       <Card variant="flat" className="relative z-10 w-full max-w-lg animate-slide-up">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-display text-2xl font-bold text-foreground">
@@ -72,7 +72,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Teams */}
+          
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="team1">Team 1</Label>
@@ -98,7 +98,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
             </div>
           </div>
 
-          {/* Venue */}
+          
           <div className="space-y-2">
             <Label htmlFor="venue">Venue</Label>
             <Input
@@ -111,7 +111,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
             />
           </div>
 
-          {/* Overs */}
+          
           <div className="space-y-2">
             <Label htmlFor="overs">Overs</Label>
             <Input
@@ -126,7 +126,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
             />
           </div>
 
-          {/* Toss */}
+          
           <div className="space-y-3">
             <Label>Toss Winner</Label>
             <div className="grid grid-cols-2 gap-3">
@@ -149,7 +149,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
             </div>
           </div>
 
-          {/* Toss Decision */}
+          
           <div className="space-y-3">
             <Label>Elected to</Label>
             <div className="grid grid-cols-2 gap-3">
@@ -172,7 +172,7 @@ export function CreateMatchModal({ isOpen, onClose, onCreateMatch }: CreateMatch
             </div>
           </div>
 
-          {/* Submit */}
+          
           <Button type="submit" variant="hero" className="w-full mt-6" size="lg">
             Start Match
           </Button>

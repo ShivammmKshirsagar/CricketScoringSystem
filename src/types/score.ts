@@ -7,11 +7,11 @@ export interface ScoreState {
   extras: Extras;
   target?: number;
   ballEvents: BallEvent[];
-  // Active player tracking
+  
   currentStrikerId?: string;
   currentNonStrikerId?: string;
   currentBowlerId?: string;
-  isFreeHit: boolean; // Free hit for next delivery
+  isFreeHit: boolean; 
 }
 
 export interface BatterStats {
@@ -53,7 +53,7 @@ export interface OverSummary {
   balls: BallEvent[];
 }
 
-// Wagon Wheel shot region type
+
 export type ShotRegion =
   | 'cover'
   | 'mid-off'
@@ -65,13 +65,13 @@ export type ShotRegion =
   | 'point'
   | 'straight';
 
-// Wagon Wheel metadata (optional, analytics only)
+
 export interface WagonWheelData {
   region: ShotRegion;
-  angle?: number; // 0-360 degrees for precise visualization
+  angle?: number; 
 }
 
-// One single definition of Ball
+
 export interface BallEvent {
   runsOffBat: number;
   ballType: BallType;
@@ -79,11 +79,11 @@ export interface BallEvent {
   isLegal: boolean;
   isWicket: boolean;
   wicketType?: WicketType;
-  // Player tracking (Optional for backward compatibility)
+  
   batterId?: string;
   bowlerId?: string;
-  wasFreeHit: boolean; // Was this delivery a free hit
-  // Wagon Wheel analytics (OPTIONAL - purely for visualization)
+  wasFreeHit: boolean; 
+  
   wagonWheel?: WagonWheelData;
 }
 
@@ -114,7 +114,7 @@ export interface PlayerStats {
   sixes: number;
 }
 
-// Wagon Wheel shot for visualization
+
 export interface WagonWheelShot {
   runs: number;
   region: ShotRegion;

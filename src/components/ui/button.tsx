@@ -15,7 +15,7 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Custom variants for cricket app
+        
         hero: "bg-primary text-primary-foreground font-bold shadow-md hover:bg-primary/90",
         score: "bg-secondary text-foreground font-display font-bold text-lg hover:bg-secondary/80 min-w-[3.5rem] h-14",
         scoreActive: "bg-primary text-primary-foreground font-display font-bold text-lg min-w-[3.5rem] h-14",

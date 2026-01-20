@@ -1,7 +1,5 @@
 import { ScoreState, BallEvent } from "@/types/score";
 
-/* ---------- Basic selectors ---------- */
-
 export function getTotalBalls(state: ScoreState): number {
   return state.overs * 6 + state.balls;
 }
@@ -17,17 +15,16 @@ export function getCurrentRunRate(state: ScoreState): number {
 }
 
 export function getCurrentOverBalls(state: ScoreState): BallEvent[] {
-  // Returns ONLY the balls in the current incomplete over
-  // Resets when a new over starts (after 6 legal deliveries)
+  
   
   const allBalls = state.ballEvents;
   if (allBalls.length === 0) return [];
   
-  // Find where the current over started
+ 
   const currentOverBalls: BallEvent[] = [];
   let legalCount = 0;
   
-  // Work backwards to find balls in current incomplete over
+  
   for (let i = allBalls.length - 1; i >= 0; i--) {
     const ball = allBalls[i];
     
@@ -35,13 +32,12 @@ export function getCurrentOverBalls(state: ScoreState): BallEvent[] {
       legalCount++;
     }
     
-    // If we've passed into the previous over, stop
+    
     if (legalCount > state.balls && state.balls > 0) {
       break;
     }
     
-    // If current over is complete (balls === 0 means over just completed)
-    // Only include balls until we hit 6 legal ones
+    
     if (state.balls === 0 && legalCount > 0) {
       break;
     }
@@ -52,12 +48,12 @@ export function getCurrentOverBalls(state: ScoreState): BallEvent[] {
   return currentOverBalls;
 }
 
-// Legacy function for backward compatibility (deprecated)
+
 export function getLastSixBalls(state: ScoreState): BallEvent[] {
   return getCurrentOverBalls(state);
 }
 
-/* ---------- Over summary ---------- */
+
 
 export interface OverSummary {
   overNumber: number;
@@ -108,15 +104,15 @@ export function getOverSummaries(state: ScoreState): OverSummary[] {
 export function getBallDisplayText(ball: BallEvent): string {
   if (ball.isWicket) return "W";
 
-  // Calculate total runs from this ball
+  
   const totalRuns = ball.runsOffBat + ball.extraRuns;
 
   switch (ball.ballType) {
     case "wide":
-      // Wide: show total (e.g., "1Wd" for normal wide, "5Wd" for wide + 4 runs)
+      
       return `${totalRuns}Wd`;
     case "no_ball":
-      // No-ball: show runs off bat + extra (e.g., "Nb+6" for six off no-ball)
+      
       if (ball.runsOffBat > 0) {
         return `${ball.runsOffBat}+Nb`;
       }
@@ -160,7 +156,7 @@ export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
     isOnStrike: boolean;
   }> = {};
 
-  // FIXED: Initialize stats for currently selected batters (even with 0 balls)
+  
   const selectedBatterIds = new Set<string>();
   if (state.currentStrikerId) selectedBatterIds.add(state.currentStrikerId);
   if (state.currentNonStrikerId) selectedBatterIds.add(state.currentNonStrikerId);
@@ -179,10 +175,10 @@ export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
     };
   });
 
-  // Update stats from ball events
+  
   state.ballEvents.forEach(ball => {
     if (ball.batterId) {
-      // Initialize if not already present (for batters who are no longer active)
+      
       if (!stats[ball.batterId]) {
         const player = allPlayers.find(p => p.id === ball.batterId);
         stats[ball.batterId] = {
@@ -206,7 +202,7 @@ export function getBattingStats(state: ScoreState, allPlayers: any[] = []) {
     }
   });
 
-  // Mark current striker (already done in initialization, but update in case of rotation)
+  
   Object.keys(stats).forEach(id => {
     stats[id].isOnStrike = id === state.currentStrikerId;
   });
@@ -219,7 +215,7 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
     id: string;
     name: string;
     overs: number;
-    balls: number; // partial over balls
+    balls: number; 
     maidens: number;
     runs: number;
     wickets: number;
@@ -227,7 +223,7 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
     noBalls: number;
   }> = {};
 
-  // FIXED: Initialize stats for currently selected bowler (even with 0 balls)
+  
   if (state.currentBowlerId) {
     const player = allPlayers.find(p => p.id === state.currentBowlerId);
     stats[state.currentBowlerId] = {
@@ -243,10 +239,10 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
     };
   }
 
-  // Update stats from ball events
+  
   state.ballEvents.forEach(ball => {
     if (ball.bowlerId) {
-      // Initialize if not already present (for bowlers who are no longer active)
+      
       if (!stats[ball.bowlerId]) {
         const player = allPlayers.find(p => p.id === ball.bowlerId);
         stats[ball.bowlerId] = {
@@ -267,7 +263,7 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
       if (ball.ballType === 'wide') s.wides++;
       if (ball.ballType === 'no_ball') s.noBalls++;
 
-      // Runs against bowler: runsOffBat + wides + no_balls (byes/legbyes don't count against bowler)
+      
       s.runs += ball.runsOffBat;
       if (ball.ballType === 'wide' || ball.ballType === 'no_ball') {
         s.runs += ball.extraRuns;
@@ -290,12 +286,7 @@ export function getBowlingStats(state: ScoreState, allPlayers: any[] = []) {
   return Object.values(stats);
 }
 
-/* ---------- Wagon Wheel Analytics ---------- */
 
-/**
- * Get wagon wheel shots for visualization
- * PURE ANALYTICS - does not affect scoring
- */
 export function getWagonWheelShots(
   state: ScoreState,
   allPlayers: any[] = [],
@@ -303,18 +294,18 @@ export function getWagonWheelShots(
 ): import("@/types/score").WagonWheelShot[] {
   const shots = state.ballEvents
     .filter(ball => {
-      // Only include balls with wagon wheel data
+      
       if (!ball.wagonWheel) return false;
-      // Only scoring shots (runs off bat)
+      
       if (ball.runsOffBat === 0) return false;
-      // Filter by batter if specified
+      
       if (batterId && ball.batterId !== batterId) return false;
       return true;
     })
     .map(ball => {
       const player = ball.batterId ? allPlayers.find(p => p.id === ball.batterId) : null;
       
-      // Convert region to angle for visualization
+      
       const regionAngles: Record<string, number> = {
         'straight': 0,
         'mid-off': 30,

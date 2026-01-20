@@ -30,7 +30,7 @@ export function Scoreboard({
 
   return (
     <Card variant="flat" className={cn("relative overflow-hidden", className)}>
-      {/* Live indicator */}
+      
       {isLive && (
         <div className="absolute top-4 right-4 flex items-center gap-2">
           <span className="relative flex h-3 w-3">
@@ -41,14 +41,14 @@ export function Scoreboard({
         </div>
       )}
 
-      {/* Team name */}
+      
       <div className="mb-6">
         <h2 className="font-display text-lg font-medium text-muted-foreground">
           {teamName}
         </h2>
       </div>
 
-      {/* Main score display */}
+      
       <div className="flex items-baseline gap-3 mb-4">
         <span className="score-display text-7xl font-display font-black text-foreground tracking-tight">
           {score.runs}
@@ -59,7 +59,7 @@ export function Scoreboard({
         </span>
       </div>
 
-      {/* Overs */}
+      
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Overs</span>
@@ -87,7 +87,7 @@ export function Scoreboard({
         )}
       </div>
 
-      {/* This over */}
+      
       <div className="pt-4 border-t border-border/50">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-muted-foreground">This Over</span>
@@ -127,7 +127,7 @@ export function Scoreboard({
         </div>
       </div>
 
-      {/* Extras summary */}
+      
       <div className="mt-4 pt-4 border-t border-border/50">
         <div className="flex items-center gap-4 text-sm">
           <span className="text-muted-foreground">Extras:</span>
@@ -140,7 +140,7 @@ export function Scoreboard({
         </div>
       </div>
 
-      {/* Target info */}
+      
       {target && (
         <div className="mt-4 pt-4 border-t border-border/50">
           <div className="flex items-center justify-between">

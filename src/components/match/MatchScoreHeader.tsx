@@ -32,7 +32,7 @@ export function MatchScoreHeader({ match, snapshot }: MatchScoreHeaderProps) {
 
   return (
     <div className="flat-card space-y-3 sm:space-y-4">
-      {/* Match Info Bar */}
+      
       <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
         {match.status === "live" && (
           <span className="status-badge status-badge-live">
@@ -60,16 +60,16 @@ export function MatchScoreHeader({ match, snapshot }: MatchScoreHeaderProps) {
         )}
       </div>
 
-      {/* Toss Info */}
+      
       <div className="text-xs text-muted-foreground">
         <span className="text-foreground font-medium">Toss:</span>{" "}
         {match.tossWinner === match.team1.id ? match.team1.name : match.team2.name} elected to{" "}
         {match.tossDecision} first
       </div>
 
-      {/* Score Display */}
+      
       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 items-center py-2">
-        {/* Team 1 */}
+        
         <div className={`text-left ${isTeam1Batting ? "" : "opacity-70"}`}>
           <div className="font-display font-semibold text-xs sm:text-sm text-foreground mb-1 truncate">
             {match.team1.name}
@@ -88,14 +88,14 @@ export function MatchScoreHeader({ match, snapshot }: MatchScoreHeaderProps) {
           )}
         </div>
 
-        {/* VS Divider */}
+        
         <div className="flex flex-col items-center">
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-secondary flex items-center justify-center">
             <span className="text-[10px] sm:text-xs font-bold text-muted-foreground">VS</span>
           </div>
         </div>
 
-        {/* Team 2 */}
+        
         <div className={`text-right ${!isTeam1Batting ? "" : "opacity-70"}`}>
           <div className="font-display font-semibold text-xs sm:text-sm text-foreground mb-1 truncate">
             {match.team2.name}
@@ -115,7 +115,7 @@ export function MatchScoreHeader({ match, snapshot }: MatchScoreHeaderProps) {
         </div>
       </div>
 
-      {/* Current batting team indicator & run rate */}
+      
       <div className="flex items-center justify-between pt-2 border-t border-border/50">
         <div className="text-xs text-muted-foreground">
           <span className="text-primary font-medium">{currentBattingTeam.name}</span>

@@ -17,9 +17,7 @@ interface ScorecardTableProps {
 }
 
 export function ScorecardTable({ score, teamName }: ScorecardTableProps) {
-    // We need player names. ideally we pass them or fetch them.
-    // getAllPlayers() is synchronous from localStorage, so we can use it directly or memoize.
-    // In a real app, we'd pass players map.
+    
     const allPlayers = getAllPlayers();
 
     const battingStats = getBattingStats(score, allPlayers);
@@ -27,7 +25,7 @@ export function ScorecardTable({ score, teamName }: ScorecardTableProps) {
 
     return (
         <div className="space-y-6">
-            {/* Batting Table */}
+            
             <Card variant="default" className="p-0 overflow-hidden">
                 <div className="bg-muted/50 px-4 py-3 border-b border-border">
                     <h3 className="font-semibold">{teamName} Batting</h3>
@@ -50,7 +48,7 @@ export function ScorecardTable({ score, teamName }: ScorecardTableProps) {
                                     <div className="font-medium flex items-center gap-2">
                                         {batter.name}
                                         {batter.isOnStrike && <span className="text-primary text-xs">★</span>}
-                                        {/* We could show 'not out' or 'out' status here if tracked */}
+                                        
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-right font-bold">{batter.runs}</TableCell>
@@ -73,7 +71,7 @@ export function ScorecardTable({ score, teamName }: ScorecardTableProps) {
                 </Table>
             </Card>
 
-            {/* Bowling Table */}
+            
             <Card variant="default" className="p-0 overflow-hidden">
                 <div className="bg-muted/50 px-4 py-3 border-b border-border">
                     <h3 className="font-semibold">Bowling</h3>
@@ -98,7 +96,7 @@ export function ScorecardTable({ score, teamName }: ScorecardTableProps) {
                                 <TableCell className="text-right">{bowler.runs}</TableCell>
                                 <TableCell className="text-right font-bold">{bowler.wickets}</TableCell>
                                 <TableCell className="text-right text-sm">
-                                    {/* Economy: Runs / Overs */}
+                                    
                                     {((bowler.overs * 6 + bowler.balls) > 0)
                                         ? (bowler.runs / ((bowler.overs * 6 + bowler.balls) / 6)).toFixed(1)
                                         : "0.0"}

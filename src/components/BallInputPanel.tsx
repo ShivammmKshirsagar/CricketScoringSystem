@@ -32,20 +32,20 @@ export function BallInputPanel({
   const handleRunSelect = (runs: number) => {
     if (disabled) return;
     setSelectedRuns(runs);
-    // Reset wagon wheel when runs change
+    
     setWagonWheelRegion(null);
   };
 
   const handleExtraToggle = (type: ExtraType) => {
     if (disabled) return;
     setExtraType(extraType === type ? null : type);
-    // Reset wagon wheel when extra type changes
+    
     setWagonWheelRegion(null);
   };
 
   const handleWicketToggle = () => {
     if (disabled) return;
-    // On free hit, only allow run-out
+    
     if (isFreeHit) {
       setIsWicket(!isWicket);
       if (!isWicket) {
@@ -59,7 +59,7 @@ export function BallInputPanel({
         setWicketType(null);
       }
     }
-    // Reset wagon wheel when wicket changes
+    
     setWagonWheelRegion(null);
   };
 
@@ -97,7 +97,7 @@ export function BallInputPanel({
       isWicket,
       wicketType: isWicket ? wicketType ?? undefined : undefined,
       wasFreeHit: isFreeHit,
-      // Add wagon wheel data ONLY if it's a scoring shot (runs off bat)
+      
       wagonWheel: wagonWheelRegion && runsOffBat > 0 && !isWicket && !extraType
         ? { region: wagonWheelRegion }
         : undefined,
@@ -121,7 +121,7 @@ export function BallInputPanel({
 
   const hasSelection = selectedRuns !== null || isWicket || extraType;
   
-  // Show wagon wheel input ONLY for scoring shots (runs 1-6, no extras, no wickets)
+  
   const showWagonWheel = 
     selectedRuns !== null && 
     selectedRuns > 0 && 
@@ -130,7 +130,7 @@ export function BallInputPanel({
 
   return (
     <Card variant="default" className={cn("", className)}>
-      {/* Free Hit Indicator */}
+     
       {isFreeHit && (
         <div className="mb-6 p-4 rounded-xl bg-accent/20 border-2 border-accent animate-pulse">
           <div className="flex items-center justify-center gap-2">
@@ -146,7 +146,7 @@ export function BallInputPanel({
         </div>
       )}
 
-      {/* Runs selection */}
+      
       <div className="mb-6">
         <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
           Runs
@@ -170,7 +170,7 @@ export function BallInputPanel({
         </div>
       </div>
 
-      {/* Wagon Wheel Input - ONLY for scoring shots */}
+      
       {showWagonWheel && (
         <WagonWheelInput
           selectedRegion={wagonWheelRegion}
@@ -179,7 +179,7 @@ export function BallInputPanel({
         />
       )}
 
-      {/* Extras */}
+     
       <div className="mb-6">
         <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
           Extras
@@ -209,7 +209,7 @@ export function BallInputPanel({
         )}
       </div>
 
-      {/* Wicket */}
+      
       <div className="mb-6">
         <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
           Wicket
@@ -244,7 +244,7 @@ export function BallInputPanel({
         )}
       </div>
 
-      {/* Actions */}
+      
       <div className="flex gap-3 pt-4 border-t border-border/50">
         {onUndo && (
           <Button
@@ -276,7 +276,7 @@ export function BallInputPanel({
         </Button>
       </div>
 
-      {/* Current selection preview */}
+      
       {hasSelection && (
         <div className="mt-4 p-3 rounded-xl bg-secondary/50 border border-border/50 animate-fade-in">
           <div className="text-sm text-muted-foreground">

@@ -14,7 +14,7 @@ export function Logo({ className, size = "md" }: LogoProps) {
 
   return (
     <div className={cn("flex items-center gap-1", className)}>
-      {/* PNG Icon */}
+      
       <img 
         src="/CricMitra.png"
         alt="Cricket Score Logo"
@@ -26,7 +26,7 @@ export function Logo({ className, size = "md" }: LogoProps) {
         )}
       />
       
-      {/* Text */}
+      
       <span className={cn(
         "font-display font-black tracking-tight",
         sizes[size]

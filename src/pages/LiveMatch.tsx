@@ -62,7 +62,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
   );
 
   const handleBallRecorded = useCallback((event: BallEvent) => {
-    // Attach current players to event
+    
     const eventWithPlayers = {
       ...event,
       batterId: currentScore.currentStrikerId,
@@ -72,7 +72,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
     const newScore = applyBall(currentScore, eventWithPlayers);
     setCurrentScore(newScore);
 
-    // Check for innings end conditions
+    
     const maxBalls = match.overs * 6;
     const totalBalls = newScore.overs * 6 + newScore.balls;
 
@@ -85,7 +85,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
           target: newScore.runs + 1,
         }));
       } else {
-        // Match complete
+        
         const result = newScore.runs >= (innings1Score.runs + 1)
           ? `${battingTeam.name} wins!`
           : `${match.tossDecision === 'bat' ? match.team1.name : match.team2.name} wins!`;
@@ -93,17 +93,17 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
       }
     }
 
-    // Check if target achieved in second innings
+    
     if (currentInnings === 2 && innings2Score.target && newScore.runs >= innings2Score.target) {
       toast.success(`${battingTeam.name} wins by ${10 - newScore.wickets} wickets!`);
     }
 
-    // Announce no-balls and free hits
+    
     if (event.ballType === 'no_ball') {
       toast.error("NO BALL! Free Hit next delivery.", { duration: 2500 });
     }
 
-    // Announce boundaries and wickets
+    
     if (event.isWicket) {
       toast.error("WICKET!", { duration: 2000 });
     } else if (event.runsOffBat === 6) {
@@ -116,7 +116,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
   const handleUndo = useCallback(() => {
     if (currentScore.ballEvents.length === 0) return;
 
-    // Remove last ball and recalculate
+    
     const newEvents = currentScore.ballEvents.slice(0, -1);
     let newScore = createInitialScoreState();
     if (currentInnings === 2) {
@@ -146,7 +146,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -179,11 +179,11 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Match Header */}
+        
         <MatchHeader match={match} className="mb-8" />
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Scoreboard */}
+          
           <div className="space-y-6">
             <Scoreboard
               teamName={battingTeam.name}
@@ -193,7 +193,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
               totalOvers={match.overs}
             />
 
-            {/* First innings summary in second innings */}
+            
             {currentInnings === 2 && (
               <Card variant="default" className="animate-fade-in">
                 <div className="flex items-center justify-between">
@@ -207,7 +207,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
               </Card>
             )}
 
-            {/* Over-by-over summary */}
+            
             {overSummaries.length > 0 && (
               <Card variant="default">
                 <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">
@@ -233,7 +233,7 @@ export function LiveMatch({ match, onEndMatch, persist = false, backTo }: LiveMa
             )}
           </div>
 
-          {/* Ball Input Panel */}
+          
           <div className="space-y-6">
             <Card variant="default">
               <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">

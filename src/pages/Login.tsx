@@ -25,7 +25,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If already authenticated as admin, redirect to admin panel
+ 
   if (isAuthenticated && user?.role === "admin") {
     return <Navigate to="/admin" replace />;
   }
@@ -37,7 +37,7 @@ export default function Login() {
     try {
       const authenticated = login({ username, password });
       
-      // Only admins should use this login page
+      
       if (authenticated.role !== "admin") {
         toast.error("This login is for administrators only");
         setIsSubmitting(false);

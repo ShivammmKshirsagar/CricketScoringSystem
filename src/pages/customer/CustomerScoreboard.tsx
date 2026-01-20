@@ -41,7 +41,7 @@ export default function CustomerScoreboard() {
     return (
       <PageTransition>
         <div className="max-w-2xl mx-auto space-y-4">
-          {/* Basic Match Info when no snapshot */}
+          
           <div className="flat-card">
             <div className="flex items-center gap-2 mb-4">
               {match.status === "upcoming" && (
@@ -89,10 +89,10 @@ export default function CustomerScoreboard() {
   return (
     <PageTransition>
       <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 space-y-3 sm:space-y-4">
-        {/* Match Score Header */}
+       
         <MatchScoreHeader match={match} snapshot={snapshot} />
 
-        {/* Tabs Navigation */}
+        
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full grid grid-cols-5 bg-secondary/50 p-1 h-auto">
             <TabsTrigger 
@@ -132,15 +132,15 @@ export default function CustomerScoreboard() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Live Tab */}
+          
           <TabsContent value="live" className="mt-3 sm:mt-4">
             <LiveTab score={currentScore} teamName={battingTeam.name} />
           </TabsContent>
 
-          {/* Scorecard Tab */}
+          
           <TabsContent value="scorecard" className="mt-3 sm:mt-4">
             <div className="space-y-4 sm:space-y-6">
-              {/* Current Innings Scorecard */}
+              
               <div>
                 <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 sm:mb-3">
                   {battingTeam.name} - {snapshot.currentInnings === 1 ? "1st" : "2nd"} Innings
@@ -148,7 +148,7 @@ export default function CustomerScoreboard() {
                 <ScorecardTable teamName={battingTeam.name} score={currentScore} />
               </div>
 
-              {/* First Innings Scorecard (if 2nd innings) */}
+              
               {snapshot.currentInnings === 2 && (
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 sm:mb-3">
@@ -171,7 +171,7 @@ export default function CustomerScoreboard() {
             </div>
           </TabsContent>
 
-          {/* Overs Tab */}
+          
           <TabsContent value="overs" className="mt-3 sm:mt-4">
             <div className="space-y-4 sm:space-y-6">
               <div>
@@ -192,7 +192,7 @@ export default function CustomerScoreboard() {
             </div>
           </TabsContent>
 
-          {/* Wagon Wheel Tab - NEW */}
+          
           <TabsContent value="wagon-wheel" className="mt-3 sm:mt-4">
             <div className="space-y-4 sm:space-y-6">
               <div>
@@ -216,7 +216,7 @@ export default function CustomerScoreboard() {
             </div>
           </TabsContent>
 
-          {/* Info Tab */}
+          
           <TabsContent value="info" className="mt-3 sm:mt-4">
             <InfoTab match={match} lastUpdated={snapshot.updatedAt} />
           </TabsContent>

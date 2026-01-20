@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Deep Navy Dark Theme - inspired by ZEMO */
+    /* Deep Navy Dark Theme*/
     --background: 216 50% 7%;
     --foreground: 210 40% 96%;
 
@@ -35,11 +35,11 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    /* Warning - for wickets */
+    /* Warning*/
     --warning: 25 95% 53%;
     --warning-foreground: 216 50% 7%;
 
-    /* Info - for extras */
+    /* Info*/
     --info: 187 100% 42%;
     --info-foreground: 216 50% 7%;
 
@@ -87,7 +87,7 @@
 }
 
 @layer components {
-  /* Clean flat card style - matches ZEMO aesthetic */
+  /* Clean flat card style*/
   .flat-card {
     @apply rounded-xl border border-border bg-card;
     box-shadow: var(--shadow-sm);

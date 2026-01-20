@@ -8,7 +8,7 @@ type StoredMatch = Omit<Match, "createdAt" | "scheduledAt"> & {
 const STORAGE_KEY = "cricket_matches";
 const EVENT_NAME = "cricket_matches_changed";
 
-// Cache for listMatches to prevent infinite loops
+
 let cachedMatches: Match[] | null = null;
 let cachedRawData: string | null = null;
 
@@ -47,7 +47,7 @@ function readAllStored(): StoredMatch[] {
 
 function writeAllStored(matches: StoredMatch[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
-  // Clear cache when data changes
+  
   cachedMatches = null;
   cachedRawData = null;
   window.dispatchEvent(new Event(EVENT_NAME));
@@ -56,12 +56,12 @@ function writeAllStored(matches: StoredMatch[]) {
 export function listMatches(): Match[] {
   const raw = localStorage.getItem(STORAGE_KEY);
   
-  // Return cached result if data hasn't changed
+  
   if (cachedMatches !== null && cachedRawData === raw) {
     return cachedMatches;
   }
   
-  // Parse and cache new data
+  
   const stored = raw ? (() => {
     try {
       const parsed = JSON.parse(raw) as StoredMatch[];
@@ -76,7 +76,7 @@ export function listMatches(): Match[] {
     .filter((m): m is Match => m !== null)
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   
-  // Cache the result
+  
   cachedMatches = matches;
   cachedRawData = raw;
   
@@ -124,7 +124,7 @@ export function deleteMatch(matchId: string): void {
 
 export function subscribeMatches(callback: () => void): () => void {
   const onChange = () => {
-    // Clear cache when storage changes
+    
     cachedMatches = null;
     cachedRawData = null;
     callback();

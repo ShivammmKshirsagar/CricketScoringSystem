@@ -40,7 +40,7 @@ export default function AdminMatches() {
   const handleDeleteMatch = (match: Match) => {
     const scoringStarted = !!getLiveScore(match.id);
     
-    // Build confirmation message based on match state
+    
     let confirmMessage = `Delete "${match.team1.shortName} vs ${match.team2.shortName}"?`;
     if (scoringStarted) {
       confirmMessage += "\n\n⚠️ This match has scoring data that will be permanently deleted.";
@@ -49,12 +49,12 @@ export default function AdminMatches() {
 
     if (window.confirm(confirmMessage)) {
       try {
-        // Clear live score data if exists
+        
         if (scoringStarted) {
           clearLiveScore(match.id);
         }
         
-        // Delete the match
+        
         deleteMatch(match.id);
         
         toast.success("Match deleted successfully");

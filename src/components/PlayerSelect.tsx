@@ -54,7 +54,7 @@ export function PlayerSelect({
     const handleAddPlayer = () => {
         if (!newPlayerName.trim()) return;
         const player = addPlayer(teamId, newPlayerName.trim());
-        onChange(player.id); // Auto-select new player
+        onChange(player.id); 
         setNewPlayerName("");
         setIsAdding(false);
     };

@@ -37,7 +37,7 @@ export default function CustomerMatches() {
         <p className="mt-0.5 text-sm text-muted-foreground">View live scores and upcoming fixtures.</p>
       </div>
 
-      {/* Live Matches Section */}
+      
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
@@ -74,7 +74,7 @@ export default function CustomerMatches() {
         )}
       </div>
 
-      {/* Upcoming Matches Section */}
+      
       <div className="space-y-3">
         <h2 className="font-display text-sm font-semibold text-foreground uppercase tracking-wide">Upcoming</h2>
 

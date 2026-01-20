@@ -16,16 +16,16 @@ export function LiveTab({ score, teamName }: LiveTabProps) {
   const currentOverBalls = getCurrentOverBalls(score);
   const overSummaries = getOverSummaries(score);
 
-  // Get current partnership info
+  
   const currentBatters = battingStats.filter(b => !b.isOut).slice(0, 2);
   const activeBowler = bowlingStats.find(b => b.id === score.currentBowlerId);
 
-  // Calculate this over runs
+  
   const thisOverRuns = currentOverBalls.reduce((sum, b) => sum + b.runsOffBat + b.extraRuns, 0);
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Current Batters */}
+      
       <Card variant="default" className="p-0 overflow-hidden">
         <div className="bg-muted/30 px-3 sm:px-4 py-2 border-b border-border/50">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Batters</h3>
@@ -62,7 +62,7 @@ export function LiveTab({ score, teamName }: LiveTabProps) {
         </div>
       </Card>
 
-      {/* Current Bowler */}
+      
       <Card variant="default" className="p-0 overflow-hidden">
         <div className="bg-muted/30 px-3 sm:px-4 py-2 border-b border-border/50">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Bowler</h3>
@@ -100,7 +100,7 @@ export function LiveTab({ score, teamName }: LiveTabProps) {
         </div>
       </Card>
 
-      {/* This Over */}
+      
       <Card variant="default">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -134,7 +134,7 @@ export function LiveTab({ score, teamName }: LiveTabProps) {
         </div>
       </Card>
 
-      {/* Recent Overs */}
+      
       {overSummaries.length > 1 && (
         <Card variant="default">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Recent Overs</div>
@@ -154,7 +154,7 @@ export function LiveTab({ score, teamName }: LiveTabProps) {
         </Card>
       )}
 
-      {/* Extras */}
+      
       <Card variant="default">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Extras</span>

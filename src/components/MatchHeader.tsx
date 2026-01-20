@@ -10,7 +10,7 @@ interface MatchHeaderProps {
 export function MatchHeader({ match, className }: MatchHeaderProps) {
   return (
     <div className={cn("text-center", className)}>
-      {/* Teams */}
+      
       <div className="flex items-center justify-center gap-6 mb-4">
         <div className="text-right flex-1">
           <h2 className="font-display text-2xl font-bold text-foreground">
@@ -31,7 +31,7 @@ export function MatchHeader({ match, className }: MatchHeaderProps) {
         </div>
       </div>
       
-      {/* Match info */}
+      
       <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
@@ -44,7 +44,7 @@ export function MatchHeader({ match, className }: MatchHeaderProps) {
         </div>
       </div>
       
-      {/* Toss info */}
+      
       <div className="mt-3 text-sm">
         <span className="text-muted-foreground">Toss: </span>
         <span className="font-medium text-foreground">

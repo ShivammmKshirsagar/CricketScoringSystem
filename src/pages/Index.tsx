@@ -32,7 +32,7 @@ const Index = () => {
     setActiveMatch(null);
   };
 
-  // Show live match if active
+  
   if (activeMatch) {
     return <LiveMatch match={activeMatch} onEndMatch={handleEndMatch} />;
   }
@@ -40,7 +40,7 @@ const Index = () => {
   return (
     <PageTransition>
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
+      
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -70,29 +70,29 @@ const Index = () => {
         </nav>
       </header>
 
-      {/* Hero Section */}
+      
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 text-center">
-          {/* Badge */}
+          
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/25 mb-6">
             <Zap className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-semibold text-primary uppercase tracking-wide">Real-time Scoring</span>
           </div>
 
-          {/* Headline */}
+          
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4 tracking-tight leading-tight">
             Score Cricket Matches
             <br />
             <span className="text-primary">Like Never Before</span>
           </h1>
 
-          {/* Subheadline */}
+          
           <p className="text-base text-muted-foreground max-w-xl mx-auto mb-8">
             A premium, real-time cricket scoring application. Track every ball, every run, 
             every wicket with precision and style.
           </p>
 
-          {/* CTA Buttons */}
+          
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button variant="hero" size="lg" onClick={() => setIsModalOpen(true)}>
               <Play className="h-4 w-4 mr-2" />
@@ -106,7 +106,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      
       <section className="py-10 section-muted border-y border-border">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16">
@@ -128,7 +128,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      
       <section className="py-14">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
@@ -175,7 +175,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      
       <section className="py-14 section-muted border-y border-border">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
@@ -193,7 +193,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
+      
       <footer className="py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
@@ -205,7 +205,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Create Match Modal */}
+      
       <CreateMatchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

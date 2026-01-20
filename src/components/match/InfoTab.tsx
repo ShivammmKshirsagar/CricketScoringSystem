@@ -12,7 +12,7 @@ export function InfoTab({ match, lastUpdated }: InfoTabProps) {
 
   return (
     <div className="space-y-4">
-      {/* Match Details */}
+      
       <Card variant="default">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Match Details</h3>
         
@@ -70,7 +70,7 @@ export function InfoTab({ match, lastUpdated }: InfoTabProps) {
         </div>
       </Card>
 
-      {/* Toss */}
+      
       <Card variant="default">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Toss</h3>
         <div className="flex items-center gap-3">
@@ -86,7 +86,7 @@ export function InfoTab({ match, lastUpdated }: InfoTabProps) {
         </div>
       </Card>
 
-      {/* Teams */}
+      
       <Card variant="default">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Teams</h3>
         

@@ -1,4 +1,4 @@
-// match.ts
+
 import type { BallEvent, Extras, BallType, WicketType } from './score';
 
 export interface Team {

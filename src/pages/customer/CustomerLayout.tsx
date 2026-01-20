@@ -29,7 +29,7 @@ export default function CustomerLayout() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Show admin info if logged in as admin */}
+              
               {isAuthenticated && user?.role === "admin" ? (
                 <>
                   <span className="hidden sm:inline text-xs text-muted-foreground">
@@ -56,7 +56,7 @@ export default function CustomerLayout() {
                   </Button>
                 </>
               ) : (
-                /* Show Admin Login button for public users */
+                
                 <Button
                   variant="outline"
                   size="sm"
